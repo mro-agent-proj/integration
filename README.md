@@ -42,7 +42,7 @@ cd mro-agent-integration
    cd frontend && pnpm install && pnpm dev    # http://localhost:5173
    ```
 
-시드 계정은 모두 비밀번호 `test1234`입니다. 신고자 `reporter1@kal.test`, 정비팀 `sys@mro.test`·`fcs@mro.test` 등, 관리자 `admin@mro.test`. 전체 목록은 `backend/seed/users.csv`.
+시드 계정은 모두 비밀번호 `test1234`입니다. 신고자 `reporter1@kal.test`, 정비팀 `sys@mro.test`·`fcs@mro.test` 등, 관리자 `admin@mro.test`. 전체 목록은 `backend/data/seed/users.csv`.
 
 - AI 없이 화면만 보려면 `cd backend && docker compose up -d` (기본 `AI_MODE=mock`, 키워드 기반 가짜 판단).
 - 처음부터 다시: `cd backend && docker compose down -v` 후 `./scripts/up.sh`. 시드·RAG는 자동으로 다시 적재되고, 그동안 만든 요청·가입 계정은 지워집니다.
@@ -59,7 +59,22 @@ cd mro-agent-integration
 
 backend가 뜰 때 `rag-restore` 서비스가 `data/rag/`의 덤프를 자동으로 DB에 복원합니다. `data/source/`는 복원에 쓰지 않습니다.
 
-git에 있는 데이터: `backend/seed/` (항공사 3, 기체 20, 부서 8, 계정 15, 수리이력 1,577), 시나리오 `backend/seed/scenarios.md` (S01~S23).
+git에 있는 데이터 (backend 레포 `data/` 아래):
+
+| 폴더 | 내용 |
+| --- | --- |
+| `backend/data/seed/` | 항공사 3, 기체 20, 부서 8, 계정 15, 수리이력 1,577 |
+| `backend/data/eval/` | 평가셋: AI 경로 시나리오 23건(`scenarios.jsonl`)과 접수 검증 6건(`validation.jsonl`), 원본 표 `scenarios.md` |
+
+## 평가
+
+스택을 띄운 상태에서 평가셋을 실제로 보내 채점합니다. 요청이 DB에 쌓이고 OpenAI 비용이 듭니다(23건 약 6분).
+
+```bash
+cd backend && python3 scripts/eval.py      # 결과: backend/data/eval/results/<시각>.json
+```
+
+배정 정답, 사람 검토 전환, 경로 일치, 자동 배정률, 평균 소요, 접수 검증 일치를 출력합니다. 항목 설명은 `backend/data/eval/README.md`.
 
 ## 최종 결과보고서
 
