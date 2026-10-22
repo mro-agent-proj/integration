@@ -64,17 +64,18 @@ git에 있는 데이터 (backend 레포 `data/` 아래):
 | 폴더 | 내용 |
 | --- | --- |
 | `backend/data/seed/` | 항공사 3, 기체 20, 부서 8, 계정 15, 수리이력 1,577 |
-| `backend/data/eval/` | 평가셋: AI 경로 시나리오 23건(`scenarios.jsonl`)과 접수 검증 6건(`validation.jsonl`), 원본 표 `scenarios.md` |
+| `backend/data/eval/scenario/` | 통합 평가셋: 손으로 만든 한국어 시나리오 23건 + 접수 검증 6건 |
+| `backend/data/eval/sdr/` | 단위 평가셋: FAA 공개 SDR 2019~2020 기반 검색 400 · LLM1 분류 200 · LLM2 부서 200 · JASC 매핑 548 |
 
 ## 평가
 
 스택을 띄운 상태에서 평가셋을 실제로 보내 채점합니다. 요청이 DB에 쌓이고 OpenAI 비용이 듭니다(23건 약 6분).
 
 ```bash
-cd backend && python3 scripts/eval.py      # 결과: backend/data/eval/results/<시각>.json
+cd backend && python3 scripts/scenario_eval.py      # 통합 평가, 결과: backend/data/eval/scenario/results/<시각>.json
 ```
 
-배정 정답, 사람 검토 전환, 경로 일치, 자동 배정률, 평균 소요, 접수 검증 일치를 출력합니다. 항목 설명은 `backend/data/eval/README.md`.
+배정 정답, 사람 검토 전환, 경로 일치, 자동 배정률, 평균 소요, 접수 검증 일치를 출력합니다. 항목 설명은 `backend/data/eval/scenario/README.md`. 단위 평가셋(`sdr/`)의 지표와 사용법은 `backend/data/eval/sdr/README.md`.
 
 ## 최종 결과보고서
 
