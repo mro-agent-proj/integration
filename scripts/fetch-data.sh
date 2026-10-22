@@ -10,8 +10,9 @@ TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 gh release download "$TAG" --repo "$REPO" --dir "$TMP"
 (cd "$TMP" && shasum -a 256 -c SHA256SUMS)
 
-mkdir -p "$ROOT/backend/data/rag"
-tar -xf "$TMP/rag-data-v1-20261021.tar" -C "$ROOT/backend/data/rag"
-tar -xf "$TMP/rag-tech-v1-20261021.tar" -C "$ROOT/backend/data/rag"
-tar -xf "$TMP/rag-source-20261022.tar"  -C "$ROOT/backend/data"
-echo "완료: $ROOT/backend/data/{rag,source}"
+DATA="$ROOT/backend/data"
+mkdir -p "$DATA/rag-dump"
+tar -xf "$TMP/sdr-jasc-amm_v1.tar"        -C "$DATA/rag-dump"   # SDR·JASC·AMM 복원용 덤프
+tar -xf "$TMP/airbus-safety-first_v1.tar" -C "$DATA/rag-dump"   # 기술자료 복원용 덤프
+tar -xf "$TMP/rag-csv.tar"                -C "$DATA"            # 확인용 CSV
+echo "완료: $DATA/{rag-dump,rag-csv}"

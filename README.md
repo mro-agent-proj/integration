@@ -53,11 +53,11 @@ cd mro-agent-integration
 
 | 첨부파일 | 풀리는 위치 | 내용 |
 | --- | --- | --- |
-| `rag-data-v1-20261021.tar` (124MB) | `backend/data/rag/2026-10-21-rag-v1/` | RAG 복원용 덤프: SDR 71,741 · JASC 548 · AMM 참조 35,396 · 근거 107,137 · 임베딩 31,678 |
-| `rag-tech-v1-20261021.tar` (1MB) | `backend/data/rag/mro-tech-handoff-20261021-v1/` | 기술자료(R04) 덤프: Airbus Safety First 61편, 조각·임베딩 496 |
-| `rag-source-20261022.tar` (134MB) | `backend/data/source/` | DB 원문을 CSV로 뽑은 것: SDR 원본 연도별 CSV(검색용 corpus 71,741건, 평가 holdout 제외), 테이블별 CSV. 확인·공유용 |
+| `sdr-jasc-amm_v1.tar` (124MB) | `backend/data/rag-dump/sdr-jasc-amm_v1/` | RAG 복원용 덤프: SDR 71,741 · JASC 548 · AMM 참조 35,396 · 근거 107,137 · 임베딩 31,678 |
+| `airbus-safety-first_v1.tar` (1MB) | `backend/data/rag-dump/airbus-safety-first_v1/` | 기술자료(R04) 복원용 덤프: Airbus Safety First 61편, 조각·임베딩 496 |
+| `rag-csv.tar` (134MB) | `backend/data/rag-csv/` | 위 덤프 내용을 사람이 보는 CSV로: `sdr-by-year/`(SDR 원본 연도별, 검색용 corpus 71,741건), `db-tables/`(테이블별). 확인·공유용 |
 
-backend가 뜰 때 `rag-restore` 서비스가 `data/rag/`의 덤프를 자동으로 DB에 복원합니다. `data/source/`는 복원에 쓰지 않습니다.
+backend가 뜰 때 `rag-restore` 서비스가 `rag-dump/`의 덤프를 자동으로 DB에 복원합니다. `rag-csv/`는 복원에 쓰지 않습니다. 폴더 전체 설명은 `backend/data/README.md`.
 
 git에 있는 데이터 (backend 레포 `data/` 아래):
 
