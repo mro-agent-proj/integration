@@ -1,0 +1,28 @@
+name: Check
+
+# 네 레포의 테스트는 각 레포 CI가 돌립니다. 여기서는 통합 레포 자체만 가볍게 확인합니다.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # submodule 포인터가 각 레포에 실제로 있는 커밋인지 (받아지지 않으면 실패)
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Scripts
+        run: |
+          bash -n scripts/*.sh
+          shellcheck scripts/*.sh
+      - name: No secrets or dumps committed
+        run: |
+          ! git ls-files | grep -E '(^|/)\.env(\.mcp)?$|\.dump$|\.tar$'
