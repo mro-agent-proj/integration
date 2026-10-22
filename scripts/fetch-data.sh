@@ -12,8 +12,8 @@ gh release download "$TAG" --repo "$REPO" --dir "$TMP"
 
 DATA="$ROOT/backend/data"
 mkdir -p "$DATA/rag-dump"
-tar -xf "$TMP/sdr-jasc-amm_v1.tar"        -C "$DATA/rag-dump"   # SDR·JASC·AMM 복원용 덤프
-tar -xf "$TMP/airbus-safety-first_v1.tar" -C "$DATA/rag-dump"   # 기술자료 복원용 덤프
+tar -xf "$TMP/sdr-jasc-amm_v2.tar"        -C "$DATA/rag-dump"   # SDR·JASC·AMM 참조·근거 복원용 덤프 (V8)
+tar -xf "$TMP/airbus-safety-first_v2.tar" -C "$DATA/rag-dump"   # 기술자료 + OpenAI 임베딩 (V8)
 tar -xf "$TMP/sdr-embeddings_v1.tar"      -C "$DATA/rag-dump"   # R02 하이브리드용 SDR 임베딩 (Flyway V7 필요)
 tar -xf "$TMP/rag-csv.tar"                -C "$DATA"            # 확인용 CSV
 echo "완료: $DATA/{rag-dump,rag-csv}"

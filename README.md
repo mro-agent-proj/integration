@@ -54,8 +54,8 @@ cd mro-agent-integration
 
 | 첨부파일 | 풀리는 위치 | 내용 |
 | --- | --- | --- |
-| `sdr-jasc-amm_v1.tar` (124MB) | `backend/data/rag-dump/sdr-jasc-amm_v1/` | RAG 복원용 덤프: SDR 71,741 · JASC 548 · AMM 참조 35,396 · 근거 107,137 · 임베딩 31,678 |
-| `airbus-safety-first_v1.tar` (1MB) | `backend/data/rag-dump/airbus-safety-first_v1/` | 기술자료(R04) 복원용 덤프: Airbus Safety First 61편, 조각·임베딩 496 |
+| `sdr-jasc-amm_v2.tar` (57MB) | `backend/data/rag-dump/sdr-jasc-amm_v2/` | RAG 복원용 덤프 6개 테이블: SDR 71,741 · JASC 548 · AMM 참조 35,396 · 근거 107,137 (backend Flyway V8 필요) |
+| `airbus-safety-first_v2.tar` (3MB) | `backend/data/rag-dump/airbus-safety-first_v2/` | 기술자료(R04) 복원용 덤프: Airbus Safety First 61편, 조각 496, OpenAI 임베딩 496 (Flyway V8 필요) |
 | `sdr-embeddings_v1.tar` (317MB) | `backend/data/rag-dump/sdr-embeddings_v1/` | R02 하이브리드 검색용 SDR 원문 임베딩 71,741건 (OpenAI text-embedding-3-large, 1024차원). backend Flyway V7 필요 |
 | `rag-csv.tar` (134MB) | `backend/data/rag-csv/` | 위 덤프 내용을 사람이 보는 CSV로: `sdr-by-year/`(SDR 원본 연도별, 검색용 corpus 71,741건), `db-tables/`(테이블별). 확인·공유용 |
 
