@@ -1,0 +1,366 @@
+{
+ "rows": [
+  {
+   "sid": "S01",
+   "tail": "HL7701",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM1 → 배정",
+   "exp": "SYS",
+   "got": "SYS",
+   "ev": "MH-001375, MH-001246",
+   "secs": "5.8초",
+   "ok": true
+  },
+  {
+   "sid": "S02",
+   "tail": "HL7702",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM1 → 배정",
+   "exp": "STR",
+   "got": "STR",
+   "ev": "MH-001453",
+   "secs": "4.9초",
+   "ok": true
+  },
+  {
+   "sid": "S03",
+   "tail": "HL7703",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM1 → 배정",
+   "exp": "AVI",
+   "got": "AVI",
+   "ev": "MH-001487",
+   "secs": "12.4초",
+   "ok": true
+  },
+  {
+   "sid": "S04",
+   "tail": "HL7704",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM1 → 배정",
+   "exp": "ENG",
+   "got": "ENG",
+   "ev": "MH-001498, MH-000451",
+   "secs": "4.2초",
+   "ok": true
+  },
+  {
+   "sid": "S05",
+   "tail": "HL7705",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "CAB",
+   "got": "ELE",
+   "ev": "SDR-31d7cf6266, SDR-66f8d913a4, MH-001080 외 1",
+   "secs": "17.7초",
+   "ok": false
+  },
+  {
+   "sid": "S06",
+   "tail": "HL7706",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "ENG",
+   "got": "SYS",
+   "ev": "SDR-407c10ce70, SDR-31bb4b2014, SDR-407c10ce70 외 1",
+   "secs": "19.2초",
+   "ok": false
+  },
+  {
+   "sid": "S07",
+   "tail": "HL7711",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 사람 검토",
+   "exp": "AVI",
+   "got": "사람 검토(SYSTEM_ERROR)",
+   "ev": "-",
+   "secs": "16.1초",
+   "ok": false
+  },
+  {
+   "sid": "S08",
+   "tail": "HL7719",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "ELE",
+   "got": "ELE",
+   "ev": "SDR-3523accc16, SDR-565495cdba, SDR-4c97b45d79 외 2",
+   "secs": "17.9초",
+   "ok": true
+  },
+  {
+   "sid": "S09",
+   "tail": "HL7709",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "ENG",
+   "got": "ENG",
+   "ev": "SDR-ff332afe44, SDR-ec1ce85f76",
+   "secs": "16.9초",
+   "ok": true
+  },
+  {
+   "sid": "S10",
+   "tail": "HL7717",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "HYD",
+   "got": "HYD",
+   "ev": "SDR-3ea130b4e6, SDR-a8acf7f0e7, SDR-a8acf7f0e7",
+   "secs": "16.0초",
+   "ok": true
+  },
+  {
+   "sid": "S11",
+   "tail": "HL7714",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS",
+   "got": "SYS",
+   "ev": "SDR-133b292160, SDR-b785e696b8",
+   "secs": "13.5초",
+   "ok": true
+  },
+  {
+   "sid": "S12",
+   "tail": "HL7707",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "STR",
+   "got": "STR",
+   "ev": "SDR-e460ac4c3e, SDR-72222092e9, SDR-e460ac4c3e 외 1",
+   "secs": "15.7초",
+   "ok": true
+  },
+  {
+   "sid": "S13",
+   "tail": "HL7708",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "CAB",
+   "got": "CAB",
+   "ev": "SDR-be7cccca24, SDR-eab50cdcf1, SDR-b0e996eb51 외 2",
+   "secs": "17.7초",
+   "ok": true
+  },
+  {
+   "sid": "S14",
+   "tail": "HL7716",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS",
+   "got": "SYS",
+   "ev": "SDR-b360df2697, SDR-d1ce17ab04, SDR-7229cb26d9 외 2",
+   "secs": "18.1초",
+   "ok": true
+  },
+  {
+   "sid": "S15",
+   "tail": "HL7718",
+   "exp_path": "LLM2 → LLM3 → 배정",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS",
+   "got": "ENG",
+   "ev": "SDR-b7c6593948, SDR-5c50263b8a, SDR-166e636fa9 외 1",
+   "secs": "17.7초",
+   "ok": false
+  },
+  {
+   "sid": "S16",
+   "tail": "HL7710",
+   "exp_path": "재조사 후 사람 검토",
+   "path": "LLM2 → LLM3 → 사람 검토",
+   "exp": "ENG / HYD / SYS 후보",
+   "got": "사람 검토(SYSTEM_ERROR)",
+   "ev": "-",
+   "secs": "16.0초",
+   "ok": false
+  },
+  {
+   "sid": "S17",
+   "tail": "HL7712",
+   "exp_path": "재조사 후 사람 검토",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS / ENG 후보",
+   "got": "SYS",
+   "ev": "SDR-da900d9bb7, SDR-56fb6d7af9, SDR-79427291f5",
+   "secs": "17.1초",
+   "ok": false
+  },
+  {
+   "sid": "S18",
+   "tail": "HL7713",
+   "exp_path": "재조사 후 사람 검토",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS / AVI 후보",
+   "got": "AVI",
+   "ev": "SDR-56036fa7b4, SDR-56036fa7b4, SDR-18c449b805 외 2",
+   "secs": "17.8초",
+   "ok": false
+  },
+  {
+   "sid": "S19",
+   "tail": "HL7715",
+   "exp_path": "재조사 후 사람 검토",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "HYD / AVI 후보",
+   "got": "HYD",
+   "ev": "SDR-7d38eb1de5, SDR-c4d9a35dce, SDR-a91dbca4eb 외 1",
+   "secs": "16.7초",
+   "ok": false
+  },
+  {
+   "sid": "S20",
+   "tail": "HL7714",
+   "exp_path": "재조사 후 사람 검토",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "CAB / STR 후보",
+   "got": "STR",
+   "ev": "SDR-50b2e05ffe, SDR-52c145d9f2, SDR-57f71a4b94",
+   "secs": "15.9초",
+   "ok": false
+  },
+  {
+   "sid": "S21",
+   "tail": "HL7705",
+   "exp_path": "LLM1 연결 금지 → LLM2 → LLM3",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "HYD",
+   "got": "HYD",
+   "ev": "SDR-7d38eb1de5, SDR-c4d9a35dce, SDR-a91dbca4eb",
+   "secs": "16.4초",
+   "ok": true
+  },
+  {
+   "sid": "S22",
+   "tail": "HL7703",
+   "exp_path": "LLM1 연결 금지 → LLM2 → LLM3",
+   "path": "LLM2 → LLM3 → 배정",
+   "exp": "SYS",
+   "got": "SYS",
+   "ev": "SDR-fda97c4283, SDR-25bf837915, SDR-6894c2aefc 외 2",
+   "secs": "17.8초",
+   "ok": true
+  },
+  {
+   "sid": "S23",
+   "tail": "HL7713",
+   "exp_path": "LLM1 → 배정",
+   "path": "LLM1 → 배정",
+   "exp": "FCS",
+   "got": "FCS",
+   "ev": "MH-001574, MH-001567",
+   "secs": "4.4초",
+   "ok": true
+  }
+ ],
+ "v": [
+  {
+   "sid": "V1",
+   "http": 422,
+   "detail": {
+    "field": "tail_number",
+    "issue": "NOT_FOUND"
+   }
+  },
+  {
+   "sid": "V2",
+   "http": 422,
+   "detail": {
+    "field": "airline_code",
+    "issue": "MISMATCH",
+    "expected": "KAL"
+   }
+  },
+  {
+   "sid": "V3",
+   "http": 422,
+   "detail": {
+    "field": "aircraft_model",
+    "issue": "MISMATCH",
+    "expected": "A321-253N"
+   }
+  },
+  {
+   "sid": "V4",
+   "http": 422,
+   "detail": {
+    "field": "tail_number",
+    "issue": "INACTIVE"
+   }
+  },
+  {
+   "sid": "V5",
+   "http": 422,
+   "detail": {
+    "field": "symptom_text",
+    "issue": "REQUIRED"
+   }
+  },
+  {
+   "sid": "V6",
+   "http": 422,
+   "detail": {
+    "field": "tail_number",
+    "issue": "FORBIDDEN_AIRLINE"
+   }
+  }
+ ],
+ "ok_total": 14,
+ "ok18": 14,
+ "llm1_end": 5,
+ "llm1_end_expected_ok": 5,
+ "human": 2,
+ "amb_human": 1,
+ "assigned": 21,
+ "avg": 14.6,
+ "max": 19.2,
+ "direct_avg": 6.3,
+ "inv_avg": 16.9,
+ "trap": {
+  "S21": {
+   "linked": [],
+   "evidence": [
+    "EV-SDR-7d38eb1de545e58966fb",
+    "EV-SDR-c4d9a35dcec3d99b9aaa",
+    "EV-SDR-a91dbca4ebe845f603b2"
+   ]
+  },
+  "S22": {
+   "linked": [],
+   "evidence": [
+    "EV-SDR-fda97c42832607790e9b",
+    "EV-SDR-25bf8379156a98bc51a0",
+    "EV-SDR-6894c2aefc32fd491ba7",
+    "EV-SDR-fda97c42832607790e9b",
+    "EV-SDR-25bf8379156a98bc51a0"
+   ]
+  }
+ },
+ "sdr_cases": 16,
+ "ids": {
+  "S01": "4531e7f6-2c8c-485b-97f1-62dd33849335",
+  "S02": "dd506260-a092-4371-b414-37394a57e21c",
+  "S03": "75440051-77fe-41c5-b203-fc68cdb633f2",
+  "S04": "d24c1422-0a83-4908-88df-f419307f3c32",
+  "S05": "05ce7bbe-e49f-4f51-960e-11fcb827ecef",
+  "S06": "4dc4b306-283c-4190-8384-562f0e6c7996",
+  "S07": "629f80e9-060c-43e5-8cb4-ff738093077c",
+  "S08": "30de7ec3-2a4e-4e3d-b6ef-95a8cb6d2a22",
+  "S09": "d2e9cc68-7ae6-47c8-bfd2-fa720a7b81ff",
+  "S10": "a3693192-83b5-42f0-a240-1dbde754bd02",
+  "S11": "f2e533ba-628c-489e-94ca-6e8fa58008e0",
+  "S12": "5fa0daaf-7564-4f43-85ea-0e26cd494d6c",
+  "S13": "795ed498-6da1-4a3e-b0bc-92a9b03117bc",
+  "S14": "2f2bfd0d-bfe1-4b9a-9bb4-c0b51da06553",
+  "S15": "1881fc7c-281d-4e78-bf2c-91ca0fd4ab2f",
+  "S16": "59ff3af9-b9ae-4ec9-bf82-0b43c6ddb745",
+  "S17": "83eca6bb-6003-4ef3-827a-63c874317175",
+  "S18": "4bb70a6d-15dc-4692-b082-8127c3aeaf05",
+  "S19": "91479f0f-d925-48f2-ba29-3a9c559709e0",
+  "S20": "f1821429-b9d0-4b0f-855d-ab23dd243fcb",
+  "S21": "c45fe777-182a-4798-b0f0-206240af3549",
+  "S22": "2a5f6e70-c5a5-43df-a13d-339fa8329a25",
+  "S23": "d96dd3d5-0f72-4bd4-b7d7-4dc29cc80823"
+ }
+}

@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>항공기 정비요청 Agent 최종 결과보고서</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Apple SD Gothic Neo", "Pretendard", sans-serif; color: #1f2937; font-size: 10pt; line-height: 1.6; margin: 0; }
+  h1 { font-size: 20pt; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 8px; margin: 0 0 14px; page-break-before: always; }
+  h1.first { page-break-before: auto; }
+  h2 { font-size: 13pt; color: #1e3a5f; margin: 20px 0 8px; }
+  h3 { font-size: 11pt; margin: 14px 0 6px; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0; padding-left: 20px; }
+  li { margin: 2px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 8.8pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th, td { border: 1px solid #cbd5e1; padding: 5px 7px; vertical-align: top; text-align: left; }
+  th { background: #eef2f7; font-weight: 700; }
+  code, .mono { font-family: Menlo, monospace; font-size: 8.2pt; }
+  td.mono { word-break: break-all; }
+  .small { font-size: 7.8pt; }
+  .tag { display: inline-block; padding: 1px 7px; border-radius: 9px; font-size: 8pt; font-weight: 700; }
+  .t-ok { background: #dcfce7; color: #166534; } .t-part { background: #fef3c7; color: #92400e; } .t-no { background: #f1f5f9; color: #475569; }
+  .note { border: 1px solid #93c5fd; background: #eff6ff; border-radius: 6px; padding: 8px 12px; margin: 10px 0; font-size: 9pt; }
+  .note b { color: #1e3a5f; }
+  figure { margin: 10px 0 14px; page-break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; }
+  figcaption { font-size: 8.5pt; color: #64748b; margin-top: 4px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid2 figure { margin: 4px 0 8px; }
+  pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; font-family: Menlo, monospace; font-size: 7.6pt; white-space: pre-wrap; word-break: break-all; page-break-inside: avoid; }
+  tr.ng td { background: #fff7f7; }
+  .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; }
+  .kpi div { border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; }
+  .kpi small { color: #64748b; display: block; font-size: 8pt; }
+  .kpi b { font-size: 15pt; color: #1e3a5f; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .cover .sub { color: #64748b; font-size: 11pt; }
+  .cover h0 { display: block; font-size: 28pt; font-weight: 800; color: #1e3a5f; line-height: 1.25; margin: 8px 0; }
+  .cover table { width: 60%; font-size: 10pt; }
+  .toc div { display: flex; gap: 22px; padding: 12px 0; border-bottom: 1px solid #e2e8f0; font-size: 12pt; font-weight: 700; }
+  .toc span { color: #1e3a5f; width: 18px; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div></div>
+  <div>
+    <div class="sub">SK AX AI Agent Capstone (MCP) · 최종 결과보고서</div>
+    <h0>항공기 정비요청 Agent</h0>
+    <div class="sub" style="font-size:12.5pt;color:#334155">정비 신고를 과거 이력과 SDR 사례로 분류하고 담당 부서에 배정하는 항공기 정비요청 Agent</div>
+  </div>
+  <table>
+    <tr><th style="width:28%">소속</th><td>4기 판교 1반</td></tr>
+    <tr><th>팀</th><td>항공기 정비요청 Agent 팀</td></tr>
+    <tr><th>팀원</th><td>유영호 · 최세환 · 김유빈 · 곽나현 · 이주영 · 김경</td></tr>
+    <tr><th>작성일</th><td>2026-10-21</td></tr>
+  </table>
+</section>
+
+<h1>목차</h1>
+<div class="toc">
+  <div><span>1</span>프로젝트 배경, 목표 및 비즈니스 가치</div>
+  <div><span>2</span>시스템 아키텍처와 주요 설계</div>
+  <div><span>3</span>팀원별 역할 분담 및 주요 기능 구현</div>
+  <div><span>4</span>AI Agent, MCP, Harness 및 인증 구현</div>
+  <div><span>5</span>API 및 End-to-End 테스트 결과</div>
+  <div><span>6</span>주요 문제와 해결 방법, 미완성 기능 및 한계</div>
+</div>
+
+<!-- ============================ 1 ============================ -->
+<h1>1. 프로젝트 배경, 목표 및 비즈니스 가치</h1>
+<h2>1.1 배경</h2>
+<p>항공사 정비통제실에는 운항 중이나 지상에서 발견한 결함 신고가 계속 들어온다. 신고는 "상승 중 객실에서 퀴퀴한 냄새가 남"처럼 자연어로 들어오고, 어느 정비 부서가 맡을지는 통제 담당자가 경험으로 판단한다.</p>
+<ul>
+  <li>같은 기체에서 최근 반복된 결함인지 매번 이력을 찾아봐야 한다.</li>
+  <li>증상이 두 계통에 걸쳐 보이면 부서 판단이 사람마다 다르고, 잘못 배정되면 재배정까지 시간이 든다.</li>
+  <li>왜 그 부서로 보냈는지 근거가 기록으로 남지 않는다.</li>
+</ul>
+<h2>1.2 목표와 범위</h2>
+<p>신고가 들어오면 같은 기체의 수리이력과 유사 결함 사례(SDR)를 근거로 담당 부서를 정하고, 근거와 함께 배정한다. 근거가 부족하거나 판단이 엇갈리면 자동 배정을 멈추고 사람 검토로 넘긴다.</p>
+<table>
+  <tr><th style="width:18%">구분</th><th>내용</th></tr>
+  <tr><td>대상 기종</td><td>Airbus A320 계열 (목업 기체 20대, 항공사 3곳: KAL·AAR·JNA)</td></tr>
+  <tr><td>배정 단위</td><td>정비 부서 8개: AVI 항전, ELE 전기, ENG 엔진, HYD 유압·착륙장치, SYS 기계 계통, STR 구조, CAB 객실, FCS 비행 조종</td></tr>
+  <tr><td>범위 안</td><td>신고자 회원가입·로그인, 신고 접수와 보완 안내, 초기 분류, 근거 조사, 검토·배정, 정비팀 수락·거절, 사람 검토, 역할별 대시보드</td></tr>
+  <tr><td>범위 밖</td><td>실제 정비 절차 지시, 운항 가능 여부 판단, 정비팀 거절 후 자동 재배정</td></tr>
+</table>
+<h2>1.3 비즈니스 가치</h2>
+<p>대상은 항공사 정비본부와 MRO(정비 위탁) 업체의 정비통제 조직이다(B2B).</p>
+<table>
+  <tr><th style="width:18%">가치</th><th>내용</th></tr>
+  <tr><td>배정 시간 단축</td><td>반복 결함은 접수 단계에서 같은 기체 이력과 바로 연결해 조사 없이 배정한다.</td></tr>
+  <tr><td>근거가 남는 배정</td><td>배정마다 수리이력 ID와 SDR·AMM 근거 ID, 원문 일부가 저장돼 사후 검토와 감사에 쓸 수 있다.</td></tr>
+  <tr><td>책임 범위 구분</td><td>근거가 맞지 않거나 판단이 엇갈리는 건은 이유와 함께 사람에게 넘겨 자동화 범위를 통제한다.</td></tr>
+  <tr><td>확장성</td><td>부서·ATA 매핑과 RAG 데이터는 버전 단위로 바꿀 수 있어 다른 기종·조직에도 같은 구조를 쓸 수 있다.</td></tr>
+</table>
+<p><b>실제 실행 근거 수치</b> (실제 모델 <code>gpt-5.4-mini</code> + MCP + RabbitMQ 종단 간, AI 경로 시나리오 23건, 5.3)</p>
+<div class="kpi">
+  <div><small>자동 배정률</small><b>{{auto_rate}}%</b><br><small>{{assigned}}/23건 자동 배정</small></div>
+  <div><small>기대 부서 일치</small><b>{{ok18}}/18</b><br><small>모호한 증상 5건 제외</small></div>
+  <div><small>평균 처리 시간</small><b>{{avg}}초</b><br><small>바로 배정 {{direct_avg}}초 · 조사 경로 {{inv_avg}}초</small></div>
+  <div><small>접수 검증</small><b>6/6</b><br><small>422 보완 안내 일치</small></div>
+</div>
+<p>반복 결함은 평균 {{direct_avg}}초에 근거 이력과 함께 배정됐고, 이력이 없는 신규 증상도 SDR 사례를 찾아 {{inv_avg}}초 안팎에 배정됐다. 사람이 이력을 찾고 부서를 판단하는 시간을 수 초로 줄이면서 배정마다 근거 ID와 원문이 남는다.</p>
+
+<!-- ============================ 2 ============================ -->
+<h1>2. 시스템 아키텍처와 주요 설계</h1>
+<h2>2.1 전체 구성</h2>
+<figure><img src="images/v1/fig-000.png"><figcaption>그림 2-1. 시스템 구성도 (저장소 최신 코드 기준). LLM은 이후 gpt-5.4-mini로 교체(2.4).</figcaption></figure>
+<table>
+  <tr><th style="width:15%">구성 요소</th><th style="width:7%">포트</th><th style="width:24%">기술</th><th>역할</th></tr>
+  <tr><td>프론트엔드</td><td>5173</td><td>Vue 3.5, TypeScript, Vite 7, PrimeVue 4</td><td>신고자·정비팀·어드민 화면과 회원가입. Spring API만 호출</td></tr>
+  <tr><td>Backend</td><td>8080</td><td>Spring Boot 3.5, Java 21, Flyway</td><td>인증·권한, 접수 확인, 상태 관리, 근거 검증과 배정 실행, 실행별 검색 범위와 MCP 위임 토큰 발급</td></tr>
+  <tr><td>RabbitMQ</td><td>5672</td><td>RabbitMQ 4.1</td><td>실행 요청·결과 이벤트 전달, 실패 메시지 DLQ</td></tr>
+  <tr><td>AI 서버</td><td>8100</td><td>Python 3.12, FastAPI, LangGraph</td><td>큐에서 실행 요청을 받아 LLM1~3 실행, MCP 도구 호출, 결과 이벤트 발행</td></tr>
+  <tr><td>business-mcp</td><td>8101</td><td>FastMCP</td><td>접수 내용, 기체 수리이력, 부서 후보 조회 (B01~B03)</td></tr>
+  <tr><td>rag-mcp</td><td>8102</td><td>FastMCP, pgvector, CPU 전용 PyTorch</td><td>JASC·SDR·AMM 검색과 근거 원문 확인 (R01~R03, R05)</td></tr>
+  <tr><td>PostgreSQL</td><td>5432</td><td>PostgreSQL 16 + pgvector 0.8.2</td><td>업무 데이터, RAG 데이터와 임베딩, 실행별 검색 범위</td></tr>
+  <tr><td>LLM</td><td>-</td><td>OpenAI gpt-5.4-mini</td><td>분류·조사·검토 판단과 다음 도구 선택</td></tr>
+</table>
+
+<h2>2.2 핵심 처리 흐름</h2>
+<figure><img src="images/v1/fig-001.png"><figcaption>그림 2-2. 정비 요청 분류·배정 흐름과 LLM별 MCP 도구</figcaption></figure>
+<ol>
+  <li>신고자가 요청을 보내면 Spring이 기체 마스터와 대조한다. 누락·충돌이면 아무것도 저장하지 않고 422(NEEDS_SUPPLEMENT)로 응답한다.</li>
+  <li>통과하면 요청을 QUEUED로 저장하고 202를 돌려준다. 커밋 후 실행 ID를 새로 만들고, 검색 범위를 기록한 뒤 위임 토큰과 함께 실행 요청을 큐에 넣는다.</li>
+  <li>AI 서버가 LLM1로 초기 분류한다. 증상만 보고 계통(ATA)을 먼저 정하고, 그 계통의 같은 기체 이력으로 충분하면 바로 배정 결과를 만든다.</li>
+  <li>부족하면 LLM2가 SDR·AMM을 조사하고 LLM3가 검토한다. 보완이 필요하면 최대 2회 재조사한다.</li>
+  <li>AI 서버는 근거 원문을 다시 확인한 뒤 결과 이벤트를 보내고, Spring이 근거 ID와 부서를 검증한 뒤 배정한다.</li>
+  <li>정비팀이 수락하면 끝나고, 거절하면 사람 검토로 넘어간다. 통제사는 수동 배정하거나 종결한다.</li>
+</ol>
+<table>
+  <tr><th style="width:20%">상태</th><th>의미</th><th style="width:30%">다음 상태</th></tr>
+  <tr><td><code>QUEUED</code></td><td>접수 확인 통과, 실행 요청 발행</td><td rowspan="4">진행 중 상태끼리(QUEUED 제외), ASSIGNED, HUMAN_REVIEW</td></tr>
+  <tr><td><code>CLASSIFYING</code></td><td>LLM1 초기 분류 중</td></tr>
+  <tr><td><code>INVESTIGATING</code></td><td>LLM2 조사 중</td></tr>
+  <tr><td><code>REVIEWING</code></td><td>LLM3 검토 중</td></tr>
+  <tr><td><code>ASSIGNED</code></td><td>부서 배정, 정비팀 응답 대기</td><td>ACCEPTED, HUMAN_REVIEW</td></tr>
+  <tr><td><code>HUMAN_REVIEW</code></td><td>사람 검토 대기, 자동 배정 중지</td><td>ASSIGNED, CLOSED</td></tr>
+  <tr><td><code>ACCEPTED · CLOSED</code></td><td>정비팀 수락 · 어드민 종결</td><td>종료</td></tr>
+</table>
+<p class="small">상태는 Spring의 RequestWorkflow로만 바뀌고, 허용되지 않은 전이는 409(INVALID_STATE)로 막는다. 사람 검토 사유: AGENT_NEEDS_HUMAN, RETRY_LIMIT, TEAM_REJECTED, VALIDATION_FAILED, SYSTEM_ERROR.</p>
+
+<h2>2.3 Agent 설계: State와 Graph</h2>
+<p>요청 하나를 처리하는 동안 노드들이 함께 쓰는 상태(GraphState)를 두고, 노드는 상태를 읽어 바뀐 필드만 돌려준다. 모든 출력 모델은 정의되지 않은 필드와 빈 문자열을 거부하고, 형식 오류가 나면 오류 내용을 알려 1회 다시 받는다.</p>
+<table>
+  <tr><th style="width:20%">필드</th><th style="width:22%">타입</th><th>채우는 곳과 의미</th></tr>
+  <tr><td><code>request_id</code> 외 4개</td><td>str</td><td>실행 요청 메시지. 요청 ID, 등록부호, 정확한 모델, 항공사, 증상</td></tr>
+  <tr><td><code>classification</code></td><td>Classification | None</td><td>LLM1. ATA 2자리, 연결한 수리이력 ID, 충분 여부, 제안 부서(충분일 때 필수), 이유</td></tr>
+  <tr><td><code>investigations</code></td><td>list[Investigation]</td><td>LLM2. 재조사마다 쌓임. ATA, 추정 결함, 심각도(LOW·MEDIUM·HIGH·AOG), 근거(1개 이상), 제안 부서</td></tr>
+  <tr><td><code>reviews</code></td><td>list[Review]</td><td>LLM3. 결정(PASS·SUPPLEMENT·HUMAN), 부서(PASS일 때 필수), 의견, 보완 요청(SUPPLEMENT일 때 필수)</td></tr>
+  <tr><td><code>retry_count</code></td><td>int</td><td>라우팅. SUPPLEMENT로 LLM2에 되돌아간 횟수</td></tr>
+</table>
+<p>근거(Evidence)는 출처(HISTORY·SDR·AMM), 근거 ID, 원문 일부(300자 이내), 사용 이유로 구성한다.</p>
+<table>
+  <tr><th>분기 조건</th><th>다음</th></tr>
+  <tr><td><code>classification.sufficient == True</code></td><td>바로 배정 결과</td></tr>
+  <tr><td><code>classification.sufficient == False</code></td><td>LLM2 조사·판정 → LLM3 검토</td></tr>
+  <tr><td><code>review.decision == "PASS"</code></td><td>근거 재확인 → 배정 결과</td></tr>
+  <tr><td><code>"SUPPLEMENT", retry_count &lt; 2</code></td><td>LLM2 재조사 (직전 보완 요청을 입력에 포함)</td></tr>
+  <tr><td><code>"SUPPLEMENT", retry_count &gt;= 2</code></td><td>사람 검토 (RETRY_LIMIT)</td></tr>
+  <tr><td><code>"HUMAN"</code> 또는 노드 보류</td><td>사람 검토 (AGENT_NEEDS_HUMAN 등)</td></tr>
+</table>
+<p>Agentic 요소는 네 가지다. LLM2·LLM3가 매 단계 다음 행동(도구 호출·마무리·보류)과 도구를 스스로 고른다. LLM3가 LLM2 결과를 검토해 부족하면 무엇을 더 볼지 지정해 되돌린다. 판정에는 도구 결과에 실제로 있던 근거만 쓴다. 근거가 맞지 않거나 한도를 넘으면 이유 코드와 함께 스스로 멈추고 사람에게 넘긴다.</p>
+<figure><img src="images/v1/fig-002.png"><figcaption>그림 2-3. DB 테이블 → MCP 도구 → GraphState 필드 연결</figcaption></figure>
+
+<h2>2.4 기술 선택과 설계 근거</h2>
+<table>
+  <tr><th style="width:12%">영역</th><th style="width:28%">선택</th><th>근거</th></tr>
+  <tr><td>Backend</td><td>Spring Boot 3.5, Spring Security(JWT), JPA, Flyway</td><td>권한, 상태 전이, 배정 같은 업무 규칙을 한 곳에 모은다. 스키마는 Flyway 이력(V1~V6)으로만 바꾼다.</td></tr>
+  <tr><td>AI 서버</td><td>FastAPI, LangGraph, LangChain MCP 어댑터</td><td>분기와 반복이 있는 흐름을 그래프로 표현하고, 요청 단위로 상태를 체크포인트에 저장한다.</td></tr>
+  <tr><td>서버 간 통신</td><td>RabbitMQ 4.1 + DLQ</td><td>LLM 처리는 수 초~수십 초가 걸려 HTTP 동기 호출 대신 큐로 분리했다.</td></tr>
+  <tr><td>MCP</td><td>FastMCP 서버 2개, streamable HTTP</td><td>업무 조회와 근거 검색을 표준 도구로 노출하고, 인증·응답 형식·읽기 전용 DB를 공통 기반으로 쓴다.</td></tr>
+  <tr><td>DB</td><td>PostgreSQL 16 + pgvector</td><td>업무 데이터와 벡터 검색을 DB 하나에서 스키마와 조회 계정으로 나눠 운영한다.</td></tr>
+  <tr><td>임베딩</td><td>multilingual-e5-small (384차원)</td><td>한국어 신고문과 영어 SDR을 같은 공간에서 비교한다. 로컬 CPU 실행이라 외부 호출 비용이 없다(rag-mcp 이미지 2GB).</td></tr>
+  <tr><td>LLM</td><td>OpenAI gpt-5.4-mini</td><td>처음에는 비용이 낮은 gpt-4o-mini로 시작했으나, 실제 실행에서 무관한 이력 연결·조기 종료가 잦아 같은 소형 계열의 상위 모델로 바꿨다. AI 서버가 허용 목록(gpt-4o-mini·gpt-4.1-mini·gpt-5.4-mini)으로 교체를 지원한다.</td></tr>
+</table>
+
+<h2>2.5 품질 특성 대응 (ISO/IEC 25010)</h2>
+<table>
+  <tr><th style="width:14%">품질 특성</th><th>설계 대응</th></tr>
+  <tr><td>기능 적합성</td><td>상태 전이 규칙을 Spring 한 곳에서 검증. 배정 직전에 부서 활성 여부와 근거 ID를 다시 확인</td></tr>
+  <tr><td>성능 효율성</td><td>접수는 202로 바로 응답하고 AI 처리는 큐로 비동기 실행. MCP 문장 8초, AI 측 도구 10초·모델 45초 제한. 실측 평균 {{avg}}초</td></tr>
+  <tr><td>호환성</td><td>MCP 표준 도구와 공통 응답 형식. 서버 간 메시지는 JSON(snake_case), 시간은 UTC</td></tr>
+  <tr><td>사용성</td><td>필드 단위 보완 안내(422)와 등록 정보 한 번에 적용, 진행 상태 폴링(3초), 단계별 판단과 근거 화면</td></tr>
+  <tr><td>신뢰성</td><td>결과 이벤트 확인 후 ack, 실패 시 재전달, 처리 불가 메시지는 DLQ, 5분 시간 초과는 사람 검토, event_id로 중복 제거</td></tr>
+  <tr><td>보안</td><td>JWT와 행 단위 권한(남의 요청은 404). MCP는 실행별 위임 토큰으로만 호출, 서버별 조회 전용 계정과 컬럼 단위 권한, 쓰기 도구 없음</td></tr>
+  <tr><td>유지보수성</td><td>인터페이스 규약으로 모듈 경계 고정, Flyway 스키마 이력, RAG 데이터는 버전 덤프로 교체</td></tr>
+  <tr><td>이식성</td><td>docker compose로 DB·큐·Backend·데이터 복원을 함께 실행. MCP·AI 서버도 각자 Dockerfile과 compose 제공</td></tr>
+</table>
+
+<h2>2.6 레퍼런스 아키텍처와 다른 점</h2>
+<p>강의 레퍼런스 아키텍처는 business-mcp가 Spring 내부 API(<code>/internal/**</code>)를 거치도록 정한다. 우리 구현은 business-mcp가 조회 전용 계정(<code>mro_business_reader</code>)으로 DB를 직접 읽고, Spring에는 <code>/internal/**</code> 경로가 없다. 업무 규칙이 MCP로 새지 않도록 다음 장치를 두었다.</p>
+<ul>
+  <li>조회 전용 계정에 필요한 테이블만 권한을 주고, <code>repair_requests</code>는 8개 컬럼만 연다(V6). 신고자 ID는 열지 않는다.</li>
+  <li>도구 호출은 읽기 전용 트랜잭션에서만 실행하고, 서버 시작 시 쓰기 권한이 있는 계정이면 실행을 거부한다.</li>
+  <li>모든 호출에 실행별 위임 토큰이 필요하고, 토큰의 요청 ID와 다른 요청은 조회할 수 없다. 상태 변경과 배정은 Spring만 한다.</li>
+</ul>
+<div class="note"><b>결정 · 유지.</b> MCP 도구는 모두 조회 전용이라 Spring을 거쳐도 얻는 업무 규칙 보호가 없고, 오히려 Spring에 도구별 내부 API와 응답 변환이 생긴다. 대신 컬럼 단위 권한(V6), 읽기 전용 트랜잭션, 실행별 위임 토큰과 요청 ID 대조로 같은 경계를 지켰고, 실제 실행에서 토큰 없는 호출 401·다른 요청 조회 FORBIDDEN을 확인했다(4.4).</div>
+
+<!-- ============================ 3 ============================ -->
+<h1>3. 팀원별 역할 분담 및 주요 기능 구현</h1>
+<h2>3.1 역할 분담</h2>
+<table>
+  <tr><th style="width:9%">팀원</th><th style="width:18%">담당</th><th>주요 구현 결과</th><th style="width:13%">저장소</th></tr>
+  <tr><td>유영호</td><td>Backend, 통합, 권한 관리</td><td>인증·회원가입, 접수 확인(422), 상태 머신, RabbitMQ·DLQ, 근거 검증과 배정 실행, 실행별 검색 범위와 MCP 위임 토큰, Flyway V1~V6, 데이터 복원 스크립트, 대시보드 백엔드 연동, CI, 전체 종단 간 통합</td><td>backend, dashboard</td></tr>
+  <tr><td>최세환</td><td>SDR·AMM DB, rag-mcp, AI 실행기</td><td>SDR·AMM·JASC 정제와 적재, e5 임베딩과 벡터 검색, rag-mcp(R01~R03, R05), RAG 데이터 덤프 전달, LLM1과 FastAPI·RabbitMQ 실행기, LLM2·LLM3 통합</td><td>agent, llm</td></tr>
+  <tr><td>김유빈</td><td>LLM2·LLM3</td><td>조사·판정(LLM2)과 검토·배정(LLM3) 노드, 도구 선택 반복, 근거 검증, MCP 계약 맞춤</td><td>llm</td></tr>
+  <tr><td>곽나현</td><td>MCP 도구와 클라이언트 연결</td><td>FastMCP 공통 기반(인증·응답 형식·읽기 전용 DB), business-mcp(B01~B03), rag-mcp 공통 기반 전환</td><td>agent</td></tr>
+  <tr><td>이주영</td><td>대시보드, 사용자 데이터</td><td>신고자·정비팀·어드민 대시보드 화면 구성, 사용자 시드 데이터</td><td>dashboard</td></tr>
+  <tr><td>김경</td><td>목업 데이터, 기술자료</td><td>수리이력 목업과 테스트 시나리오 29건, Safety First 기술자료 61편 정제·임베딩과 V5 테이블, 흐름도·구성도</td><td>backend(seed, V5)</td></tr>
+</table>
+<p><b>통합 단계(10/21)에서 추가·수정한 사항</b></p>
+<table>
+  <tr><th style="width:13%">저장소</th><th>변경</th></tr>
+  <tr><td>backend</td><td>신고자 회원가입·항공사 목록 API, FCS(ATA 27) 부서·계정·수리이력 78건·시나리오 S23, 기술자료 부서 매핑 재계산, Flyway V6, 실행별 검색 범위와 MCP 토큰 발급, VALIDATION_FAILED 사유 보존</td></tr>
+  <tr><td>dashboard</td><td>목업 제거와 실제 API 연결, 로그인·회원가입 화면, 전체 화면 디자인 개편(항공기 정비요청 Agent 로고)</td></tr>
+  <tr><td>agent</td><td>business-mcp 토큰 검증, 기종 기준 검색 범위, 넓은 검색의 단어 순위 검색, 도구 설명 보강, CPU 전용 PyTorch(이미지 19.3GB → 2GB)</td></tr>
+  <tr><td>llm</td><td>LLM1 2단계 분류와 연결 이력 검증, LLM2 근거 확보 장치, 모델 입력 축약, 형식 오류 재시도, gpt-5.4-mini 지원, Dockerfile 기본 이미지 수정</td></tr>
+</table>
+
+<h2>3.2 역할별 화면</h2>
+<table>
+  <tr><th style="width:15%">화면</th><th>주요 기능</th></tr>
+  <tr><td>로그인·회원가입</td><td>신고자는 이름, 이메일, 소속 항공사, 비밀번호로 가입하고 바로 로그인. 역할에 따라 각자의 화면으로 이동</td></tr>
+  <tr><td>신고자</td><td>수리 요청 작성(등록부호·모델·항공사·증상), 422 보완 안내와 등록 정보 적용, 내 요청 목록과 검색, 진행 단계 표시(처리 중이면 3초마다 갱신)</td></tr>
+  <tr><td>정비팀</td><td>내 부서 배정 대기함(15초마다 갱신), 대기·수락·거절 건수, 수락, 사유를 적는 거절, AI 판단 근거 보기</td></tr>
+  <tr><td>어드민(통제사)</td><td>전체 요청과 사람 검토 우선 정렬, 통계(전체, 사람 검토, 자동 배정률, 첫 배정까지 평균 시간), RAG 데이터 상태, 수동 배정·종결</td></tr>
+  <tr><td>판단 근거</td><td>단계별 AI 판단, ATA, 제안 부서, 재조사 횟수, 근거 목록(HISTORY·SDR·AMM), 상태 이력. 수동 배정이 AI 제안과 다르면 표시</td></tr>
+</table>
+<div class="grid2">
+  <figure><img src="images/01_login.png"><figcaption>그림 3-1. 로그인</figcaption></figure>
+  <figure><img src="images/02_signup_validation.png"><figcaption>그림 3-2. 신고자 회원가입 (입력 검증)</figcaption></figure>
+  <figure><img src="images/04_reporter_422_supplement.png"><figcaption>그림 3-3. 신고자 접수와 422 보완 안내 (등록 정보 A321-253N 적용)</figcaption></figure>
+  <figure><img src="images/05_reporter_request_detail.png"><figcaption>그림 3-4. 신고자 요청 상세와 진행 단계 (S10, 조사 경로 완료 후 배정)</figcaption></figure>
+  <figure><img src="images/06_maintenance_queue_detail.png"><figcaption>그림 3-5. 정비팀 배정 대기함 (FCS, S23 반복 결함 바로 배정)</figcaption></figure>
+  <figure><img src="images/08_maintenance_reject_dialog.png"><figcaption>그림 3-6. 정비팀 배정 거절 (사유 필수, 사람 검토로 전환)</figcaption></figure>
+  <figure><img src="images/10_admin_console.png"><figcaption>그림 3-7. 어드민 운영 콘솔과 통계 (시연 데이터 11건 기준)</figcaption></figure>
+  <figure><img src="images/12_admin_manual_assign.png"><figcaption>그림 3-8. 사람 검토(정비팀 거절) 건의 수동 배정</figcaption></figure>
+</div>
+<figure><img src="images/09b_investigation_sdr_evidence.png"><figcaption>그림 3-9. 판단 근거 화면: S10 브레이크 진동 → ATA 32, HYD. LLM2가 찾은 SDR 사례("REPEATED VIBRATION AND THUMPING … EACH TIME THE BRAKES WERE APPLIED")가 근거로 표시된다.</figcaption></figure>
+
+<h2>3.3 데이터 구성</h2>
+<table>
+  <tr><th style="width:17%">데이터</th><th style="width:16%">규모</th><th>출처와 특징</th></tr>
+  <tr><td>기체·항공사</td><td>20대, 3곳</td><td>목업. A320 계열 정확한 모델 10종(모두 SDR에 있는 모델)</td></tr>
+  <tr><td>수리이력</td><td>1,577건</td><td>목업. FAA SDR 실제 결함을 한국어로 다시 쓰고 JASC 코드를 붙임. 비행 조종(FCS) 78건 포함</td></tr>
+  <tr><td>부서</td><td>8개</td><td>부서별 담당 ATA 장 매핑</td></tr>
+  <tr><td>계정</td><td>15개 + 가입</td><td>시드: 어드민 1, 신고자 6, 정비팀 8(부서별 1). 신고자는 회원가입 가능</td></tr>
+  <tr><td>SDR 사례</td><td>71,741건</td><td>FAA Service Difficulty Reports. 원본 76개 필드 보존, 평가용 일부는 검색 제외</td></tr>
+  <tr><td>AMM 인용</td><td>35,396건</td><td>SDR 서술에서 추출한 AMM 참조 번호와 인용 맥락 (매뉴얼 본문 아님)</td></tr>
+  <tr><td>JASC·청크·근거</td><td>548 / 31,678 / 107,137</td><td>결함 분류 코드, AMM 청크 임베딩(384차원), 근거 ID</td></tr>
+  <tr><td>기술자료</td><td>61편, 496조각</td><td>Airbus Safety First 아카이브(2005~2013). 테이블과 데이터, 부서 매핑은 준비, 검색 도구는 미구현</td></tr>
+</table>
+<p class="small">RAG 데이터는 공유 DB에 직접 넣지 않고, 데이터만 담은 덤프를 Backend 복원 스크립트가 넣는다. 테이블이 비어 있을 때만 복원하고 건수·해시를 확인한다.</p>
+
+<!-- ============================ 4 ============================ -->
+<h1>4. AI Agent, MCP, Harness 및 인증 구현</h1>
+<h2>4.1 AI Agent 구현</h2>
+<table>
+  <tr><th style="width:24%">위치 (llm 저장소)</th><th>내용</th></tr>
+  <tr><td><code>agent/full_workflow.py</code></td><td>LLM1→2→3 전체 그래프와 분기 함수. 재조사 한도 2, 재귀 한도 80</td></tr>
+  <tr><td><code>agent/nodes/</code></td><td><code>classify.py</code>(LLM1), <code>investigate.py</code>(LLM2), <code>review.py</code>(LLM3), <code>common.py</code>(준비 단계와 근거 선택 반복, 모델 입력 축약)</td></tr>
+  <tr><td><code>agent/tools.py</code></td><td>도구 호출 관문: 허용 목록, 입력 검증, 노드당 호출 8회 한도, 근거 원문 대조</td></tr>
+  <tr><td><code>server/</code></td><td>RabbitMQ 실행기, 이벤트 저널(SQLite), 위임 토큰 처리</td></tr>
+</table>
+<ul>
+  <li><b>LLM1:</b> 접수 내용(B01) → 부서 후보(B03) → 같은 기체 수리이력(B02)을 정해진 순서로 가져온다. 먼저 증상 문장만으로 ATA 후보 1~3개를 고르고, 그 ATA의 이력만 비교한다. 연결 이력마다 "증상과 이력 문장에 둘 다 있는 대상 표현"을 적게 하고 코드가 실제로 확인한다. 확인되지 않으면 조사(LLM2)로 넘긴다.</li>
+  <li><b>LLM2·LLM3:</b> 준비 단계(B01, B03) 후 모델이 다음 행동을 정하고 필요한 도구를 고른다. 근거 없이 결론을 쓰려 하면 반려하고, 같은 도구·같은 인자의 반복 호출은 실행하지 않는다. 프롬프트에는 도구 결과 속 지시문을 따르지 말라는 지침이 있다.</li>
+  <li><b>상태 저장:</b> 요청 단위 체크포인트(기본 SQLite, 설정 시 Postgres). 이벤트 ID는 요청과 단계로 정해지는 값이라 다시 보내도 같고, 같은 요청이 다시 오면 저장된 최종 이벤트를 재발행한다.</li>
+  <li><b>진행 이벤트:</b> STAGE_STARTED, STAGE_RESULT(Spring이 단계별 결과 저장), COMPLETED(배정 또는 사람 검토), FAILED(RUN_TIMEOUT 등). Spring은 이를 판단 근거 화면(<code>/requests/{id}/trace</code>)으로 보여준다.</li>
+</ul>
+<figure style="width:46%;margin-left:auto;margin-right:auto"><img src="images/langgraph.png"><figcaption>그림 4-1. LangGraph 전체 그래프 (<code>build_full_graph().get_graph().draw_mermaid()</code>로 출력)</figcaption></figure>
+
+<h3>실제 실행 기록: S10 (이력 없는 신규 증상 → 조사 경로)</h3>
+<p>입력: HL7717 / A321-231 / AAR, "착륙 후 지상 이동 중 브레이크를 밟을 때마다 기체 전체에 반복적인 진동과 덜컹거림이 느껴짐." (실제 gpt-5.4-mini, business-mcp·rag-mcp, 위임 토큰 사용)</p>
+<table class="small">
+  <tr><th style="width:5%">순서</th><th style="width:11%">단계</th><th style="width:9%">종류</th><th style="width:20%">도구 / 이벤트</th><th>입력 요약</th><th style="width:26%">결과</th></tr>
+  {{trace_rows}}
+</table>
+<p>LLM1은 같은 기체 이력 83건 가운데 브레이크(ATA 32) 이력이 없어 연결하지 않았다. LLM2는 처음 근거 없이 마무리하려다 반려된 뒤 <code>search_sdr_cases</code>를 영어 핵심어 <code>brake vibration taxi</code>로 호출해 SDR 5건을 찾았고, 그중 2건으로 조사안을 썼다. LLM3가 PASS한 뒤 최종 재검증에서 <code>get_evidence</code>(R05)로 두 근거의 원문을 다시 확인하고 HYD 배정 이벤트를 보냈다.</p>
+<pre>{{trace_final}}</pre>
+
+<h2>4.2 MCP 구현</h2>
+<table>
+  <tr><th style="width:6%">ID</th><th style="width:22%">도구</th><th>입력과 동작</th><th style="width:9%">상태</th></tr>
+  <tr><td>B01</td><td><code>get_request_context</code></td><td>접수 내용·기체·현재 상태와 검색 범위(model_key). 기체 마스터와 다르면 NEEDS_INPUT</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>B02</td><td><code>get_aircraft_history</code></td><td>같은 기체 수리이력(MH-*)을 최신순, 신고 시점 이전만. 최대 100건, 커서</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>B03</td><td><code>search_departments</code></td><td>후보 JASC의 ATA와 질의 속 부서명으로 부서 후보 순위</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>R01</td><td><code>search_jasc_codes</code></td><td>질의 또는 코드로 JASC 후보 검색 (영어 단어, 하나라도 맞으면 순위)</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>R02</td><td><code>search_sdr_cases</code></td><td>같은 모델의 유사 SDR 사례 검색. explore는 단어 순위, exact는 구절</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>R03</td><td><code>search_amm_references</code></td><td>벡터(코사인) 검색 또는 AMM 번호 정확 조회</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>R04</td><td><code>search_technical_docs</code></td><td>Airbus 기술자료 검색 (데이터·테이블·부서 매핑만 준비)</td><td><span class="tag t-no">미구현</span></td></tr>
+  <tr><td>R05</td><td><code>get_evidence</code></td><td>EV-SDR-*, EV-AMM-* 근거 원문 재확인</td><td><span class="tag t-ok">구현</span></td></tr>
+</table>
+<h3>서버 구성</h3>
+<p>business-mcp(8101)와 rag-mcp(8102)는 공통 기반(<code>src/mro_mcp/common</code>)을 같이 쓴다: 위임 토큰 검증 미들웨어, 읽기 전용 DB 연결, 공통 응답 형식(status, request_id, context_version, trace_id, counts, next_cursor, warnings, error, items), 오류 코드, 상태 확인(<code>/health</code>, <code>/health/ready</code>, <code>/health/live</code>). 모든 도구는 읽기 전용이다. AI 서버의 MCP 클라이언트 하나가 두 서버에 연결하고, LLM1은 business 도구만, LLM2·LLM3는 두 서버 도구를 모두 받는다.</p>
+<table>
+  <tr><th style="width:14%">서버</th><th style="width:30%">조회 테이블</th><th style="width:20%">DB 계정</th><th>나눈 이유</th></tr>
+  <tr><td>business-mcp</td><td><code>repair_requests</code>(8개 컬럼), <code>aircraft</code>, <code>maintenance_history</code>, <code>departments</code></td><td><code>mro_business_reader</code></td><td>업무 규칙과 권한이 걸린 데이터, 실시간으로 바뀜, 키 값으로 정확히 조회</td></tr>
+  <tr><td>rag-mcp</td><td><code>jasc_codes</code>, <code>sdr_cases</code>, <code>amm_references</code>, <code>evidence</code>, <code>rag.amm_embeddings</code> 등</td><td><code>mro_reader</code></td><td>외부 참고 자료, 버전 단위로 교체, 전문검색과 벡터 검색, 임베딩 모델이 필요해 무거움</td></tr>
+</table>
+<h3>위임 인증과 검색 범위</h3>
+<ol>
+  <li>요청이 저장되면 Spring이 실행 ID를 새로 만들고 <code>rag_request_contexts</code>에 검색 범위를 기록한다: 요청 ID, 버전, 신고자·항공사, 모델 키(하이픈 제거), 준비된 데이터 버전과 색인, 만료 1시간.</li>
+  <li>Spring이 서버별 위임 토큰 2개(HS256, 발급자 <code>mro-backend</code>, 대상 <code>mro-business</code>·<code>mro-rag</code>, 유효 10분)를 AMQP 헤더(<code>x-mro-business-token</code>, <code>x-mro-rag-token</code>)로 보낸다.</li>
+  <li>AI 서버는 토큰을 프롬프트나 체크포인트에 남기지 않고 MCP 호출의 Authorization 헤더로만 쓴다.</li>
+  <li>MCP 서버는 서명·대상·만료를 확인하고, 도구 입력의 요청 ID가 토큰과 다르면 거부한다. rag-mcp는 기록된 범위가 활성·미만료·같은 버전인지도 확인한다.</li>
+</ol>
+<p>SDR 운항사는 미국 항공사뿐이라 검색 범위는 항공사 필터 없이 <b>정확한 모델만</b>으로 정했다(운항사 NULL, 매핑 버전 <code>backend-v1-model-only</code>).</p>
+<h3>근거 ID와 검증</h3>
+<table>
+  <tr><th style="width:12%">출처</th><th style="width:16%">근거 ID</th><th>AI 서버 (발행 전)</th><th>Spring (배정 직전)</th></tr>
+  <tr><td>HISTORY</td><td><code>MH-000123</code></td><td>B02로 다시 조회. LLM1이 연결하지 않은 이력은 근거로 인정하지 않음</td><td>수리이력의 기체 모델이 요청과 같은지</td></tr>
+  <tr><td>SDR</td><td><code>EV-SDR-…</code></td><td>R05로 원문 재확인</td><td>준비된 데이터 버전에 있고 종류·모델이 맞는지</td></tr>
+  <tr><td>AMM</td><td><code>EV-AMM-…</code></td><td>R05로 원문 재확인</td><td>위와 같음. 같은 SDR에서 나온 근거는 한 묶음</td></tr>
+</table>
+<p>AI 서버는 근거 원문 일부가 실제로 가져온 원문 안에 있는지, 부서가 배정 가능한지도 확인한다. 모델이 발췌를 의역하면 조회한 근거의 원문으로 바꾸고, 조회하지 않은 ID는 탈락시킨다. Spring은 근거가 없거나 확인되지 않는 ID가 있으면 배정하지 않고 사람 검토(VALIDATION_FAILED)로 넘긴다.</p>
+<h3>오류와 예외 처리</h3>
+<ul>
+  <li>결과 상태 OK, NO_DATA, NO_MATCH, NEEDS_INPUT, ERROR와 오류 코드(INVALID_ARGUMENT, FORBIDDEN, MISSING_SCOPE, INDEX_NOT_READY, INVALID_CURSOR, CONTEXT_VERSION_CONFLICT 등), 재시도 가능 여부를 함께 돌려준다.</li>
+  <li>MCP 서버: 문장 실행 8초, 입력 2,000자, 목록 요약 30개 제한, 서명된 커서(30분 만료).</li>
+  <li>AI 서버: 도구 호출 10초 제한, 일시 오류와 <code>retryable=true</code>일 때만 1회 재시도. 처리하지 못한 예외는 FAILED 이벤트로 보내고 Spring이 SYSTEM_ERROR로 사람 검토에 넘긴다.</li>
+</ul>
+
+<h2>4.3 Harness</h2>
+<table>
+  <tr><th style="width:13%">구성 요소</th><th style="width:20%">강의 최소 기준</th><th>우리 구현</th><th style="width:17%">판정</th></tr>
+  <tr><td>Instructions</td><td>역할·도구 규칙·금지 사항·출력 형식을 파일로 관리</td><td>LLM별 시스템 프롬프트에 역할·도구 규칙·결론/보류 조건·주입 방어 지침, 엄격한 Pydantic 출력. 프롬프트는 코드 상수로 git 관리. MCP 도구 설명에 검색 요령 명시</td><td><span class="tag t-part">일부 (md 파일 아님)</span></td></tr>
+  <tr><td>Tools</td><td>결과 길이 제한, 오류는 ToolMessage</td><td>허용 목록, JSON 스키마 입력 검증, 서버 소유 인자 차단, 확인 안 된 JASC 힌트 제외, 10초 제한·1회 재시도. 모델에는 응답 본문 없이 상태·범위·ID만 전달</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>Context</td><td>Token 예산, 넘으면 요약</td><td>증상 2,000자·근거 원문 1,500자(인용 300자) 제한, 이력은 인용분 + 최근 20건, 재조사 때 직전 보완 요청만 전달 (158K 토큰 초과 문제를 해결)</td><td><span class="tag t-part">축약 구현, Token 집계 없음</span></td></tr>
+  <tr><td>State·Memory</td><td>thread 단위 저장, 재개</td><td>요청 단위 체크포인트, 이벤트 저널로 최종 이벤트 재발행</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>Agent Loop</td><td>최대 8턴, 120초, 같은 도구 3회</td><td>노드당 AI 선택 도구 8회, 같은 도구·같은 인자 반복 차단, 재조사 2회, 재귀 80, 실행 280초(모델 45초, 도구 10초), Spring 5분 시간 초과</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>Guardrails</td><td>변경 도구 interrupt, 개인정보 마스킹</td><td>MCP에 쓰기 도구 없음, 배정은 Spring이 검증 후 실행. 위임 토큰·요청 ID 검사, 근거 원문 대조, 근거 없는 결론 반려, 토큰은 프롬프트·체크포인트에 남기지 않음, 신고자 식별 컬럼 비공개</td><td><span class="tag t-ok">구현</span></td></tr>
+  <tr><td>Recovery</td><td>429·503 2회 재시도, 대체 모델 또는 FAILED</td><td>도구는 재시도 가능 오류만 1회. 모델 출력 형식 오류는 오류 내용을 알려 1회 재요청. 대체 모델 없음, 실패 시 FAILED. 큐는 결과 확인 후 ack, 거부는 DLQ</td><td><span class="tag t-part">일부 (대체 모델 없음)</span></td></tr>
+  <tr><td>Observability</td><td>trace id 하나로 Node·도구·Token·지연</td><td>Spring 이벤트·단계 결과와 trace API, AI 측 도구 호출 기록, MCP 응답 trace_id·소요 시간 로그</td><td><span class="tag t-no">LangSmith·Token 집계 없음</span></td></tr>
+</table>
+<h3>Harness 동작 증빙 (실제 실행)</h3>
+<table>
+  <tr><th style="width:22%">장치</th><th>관찰 결과</th></tr>
+  <tr><td>도구 호출 기록</td><td>4.1 S10 실행 기록: 단계별 도구 이름·입력·결과 상태·건수와 반환 근거 ID</td></tr>
+  <tr><td>근거 없는 결론 반려</td><td>S10에서 LLM2가 근거 0건으로 FINISH → <code>FINISH_WITHOUT_EVIDENCE</code> 반려 → SDR 검색 후 조사안 작성</td></tr>
+  <tr><td>재조사 루프 (최대 2회)</td><td>HL7712(S17): 조사 → 검토 → <b>재조사 2회</b> → 검토 → 배정. HL7715(S19): 재조사 1회 후 배정</td></tr>
+  <tr><td>노드당 도구 한도</td><td>보완 전 실행에서 "도구 호출 한도 안에 조사를 마치지 못했습니다"로 사람 검토(AGENT_NEEDS_HUMAN) 전환 11건 (예: HL7717, HL7705)</td></tr>
+  <tr><td>RETRY_LIMIT · RUN_TIMEOUT</td><td>오늘 실행에서는 발생하지 않음(재조사 2회 후 LLM3가 PASS). 분기와 처리는 자동화 테스트로 확인</td></tr>
+</table>
+<p class="small">변경 도구 승인(interrupt)은 해당 도구를 만들지 않아 적용하지 않았다. 배정이라는 변경 동작은 Spring으로 옮기고 실행 직전에 근거와 부서를 다시 검증한다.</p>
+
+<h2>4.4 인증과 권한</h2>
+<ul>
+  <li>로그인은 JWT access token 하나(HMAC 서명, 유효 8시간)를 쓴다. 요청마다 사용자를 DB에서 다시 읽어 비활성 계정은 막는다. 비밀번호는 BCrypt로 저장한다.</li>
+  <li>신고자는 직접 가입한다(소속 항공사 선택, 비밀번호 8~72자, 중복 이메일 409). 정비팀과 어드민 계정은 시드로만 만든다.</li>
+  <li>역할이 맞지 않으면 403, 역할은 맞지만 본인 것이 아니면 404를 돌려 다른 사람 요청의 존재 여부를 숨긴다.</li>
+</ul>
+<table>
+  <tr><th>동작</th><th>신고자</th><th>정비팀</th><th>어드민(통제사)</th></tr>
+  <tr><td>수리 요청 생성</td><td>소속 항공사 기체만</td><td>불가</td><td>불가</td></tr>
+  <tr><td>요청 조회</td><td>본인이 낸 것</td><td>본인 부서 배정 건</td><td>전체</td></tr>
+  <tr><td>판단 근거(trace)</td><td>불가</td><td>본인 부서 배정 건</td><td>전체</td></tr>
+  <tr><td>수락·거절</td><td>불가</td><td>본인 부서, ASSIGNED일 때</td><td>불가</td></tr>
+  <tr><td>사람 검토·통계</td><td>불가</td><td>불가</td><td>수동 배정·종결, 요약 통계</td></tr>
+</table>
+<p><b>인증 증빙</b> (실제 서버 호출)</p>
+<pre>{{auth_evidence}}</pre>
+
+<h2>4.5 대기열 (RabbitMQ · DLQ)</h2>
+<table>
+  <tr><th style="width:22%">큐</th><th style="width:15%">방향</th><th>처리와 실패</th></tr>
+  <tr><td><code>mro.agent.run</code></td><td>Spring → AI 서버</td><td>TTL 5분. 거부되거나 만료되면 <code>mro.agent.run.dlq</code>로 이동하고 Spring이 사람 검토(SYSTEM_ERROR)로 바꿈</td></tr>
+  <tr><td><code>mro.agent.events</code></td><td>AI 서버 → Spring</td><td>처리 실패 시 최대 3회(1초부터 3배씩) 재시도 후 <code>mro.agent.events.dlq</code>. 형식 오류·없는 요청은 바로 DLQ</td></tr>
+</table>
+<p>Spring은 발행 때 브로커 확인을 기다리고, AI 서버는 prefetch 1로 받아 최종 이벤트 발행이 확인된 뒤에만 ack한다. 처리 중 종료되면 메시지가 다시 전달된다. Spring은 30초마다 5분 넘게 진행 중인 요청을 찾아 사람 검토로 바꾼다.</p>
+<p><b>DLQ 증빙</b>: AI 서버를 중지한 상태에서 요청을 접수했다.</p>
+<pre>{{dlq_evidence}}</pre>
+
+<!-- ============================ 5 ============================ -->
+<h1>5. API 및 End-to-End 테스트 결과</h1>
+<h2>5.1 API</h2>
+<table>
+  <tr><th style="width:14%">대상</th><th>메서드와 경로 (<code>/api/v1</code>)</th></tr>
+  <tr><td>공개</td><td><code>POST /auth/login</code>, <code>POST /auth/signup</code>, <code>GET /airlines</code>, <code>GET /actuator/health</code>, Swagger</td></tr>
+  <tr><td>로그인 사용자</td><td><code>GET /me</code>, <code>GET /departments</code>, <code>GET /requests</code>(mine·status·department·기간 필터), <code>GET /requests/{id}</code></td></tr>
+  <tr><td>신고자</td><td><code>POST /requests</code> (202 접수, 422 보완 안내)</td></tr>
+  <tr><td>정비팀</td><td><code>GET /assignments</code>, <code>POST /assignments/{id}/accept</code>, <code>POST /assignments/{id}/reject</code>(사유 필수)</td></tr>
+  <tr><td>정비팀·어드민</td><td><code>GET /requests/{id}/trace</code> (단계별 판단, 상태 이력)</td></tr>
+  <tr><td>어드민</td><td><code>GET /reviews</code>, <code>POST /reviews/{id}/resolve</code>(ASSIGN·CLOSE), <code>GET /stats/summary</code></td></tr>
+  <tr><td>서버 간</td><td>MCP <code>POST /mcp</code>(8101·8102, 위임 토큰 필수), 상태 확인 <code>/health</code>·<code>/health/ready</code>·<code>/health/live</code>, AI 서버 <code>/health/live</code>·<code>/health/ready</code>(8100)</td></tr>
+</table>
+<p class="small">에러는 모두 같은 형식(<code>{"error": {"code", "message", "details"}}</code>)을 쓴다. <code>/internal/**</code>은 막혀 있다.</p>
+
+<h2>5.2 자동화 테스트</h2>
+<table>
+  <tr><th style="width:13%">저장소</th><th style="width:20%">결과</th><th>다루는 범위</th></tr>
+  <tr><td>backend</td><td>35개 통과, GitHub Actions CI 성공 (최근 5회 연속)</td><td>로그인·가입·401/403/404, 스키마와 조회 권한(V6 포함), 근거 검증, 접수 422, 위임 토큰과 검색 범위 기록, 재조사, 거절 후 수동 배정, 두 DLQ, TTL 만료, 시간 초과, 통계. Testcontainers(Postgres, RabbitMQ)</td></tr>
+  <tr><td>agent (MCP)</td><td>33개 통과(DB 포함), GitHub Actions CI 성공 (최근 6회 연속)</td><td>도구 이름·스키마와 명세 일치, 토큰 대상·서명·만료, 요청별 권한, 응답 형식, 커서, 모델 기준 범위, 넓은 검색 단어 순위, 쓰기 거부, DDL 일치, 실제 HTTP 왕복</td></tr>
+  <tr><td>llm (AI 서버)</td><td>135개 통과, 1.9초 (로컬, CI 없음)</td><td>그래프 분기, 도구 관문, LLM1 2단계 분류와 연결 검증, LLM2 근거 장치, 모델 입력 축약, 형식 오류 재시도, 서버·큐 처리, 스키마</td></tr>
+</table>
+<pre>backend  CI  success  "README 전면 정리 …"                      2026-10-21 17:38  (runs/39570840792)
+agent    CI  success  "Rewrite README for the connected MCP …"  2026-10-21 17:38  (runs/39570843396)
+llm      $ uv run --extra openai pytest -q   →   135 passed in 1.38s</pre>
+
+<h2>5.3 End-to-End 시나리오와 결과</h2>
+<p>시나리오는 수리이력 목업에 맞춰 만든 29건이다. AI 경로 23건 가운데 LLM1에서 끝나는 것은 반복 결함 7건(약 30%)뿐이고, 나머지 16건은 LLM2·LLM3까지 가서 배정되거나 사람 검토로 넘어가도록 설계했다. 접수 충돌 6건은 AI 서버까지 가지 않는다.</p>
+<table>
+  <tr><th style="width:26%">유형</th><th style="width:6%">건수</th><th>기대 경로</th><th style="width:14%">끝나는 곳</th></tr>
+  <tr><td>반복 결함 (비행 조종 1건 포함)</td><td>7</td><td>같은 기체·같은 ATA가 30일 안에 반복 → LLM1 충분 판정 → 바로 배정</td><td>LLM1</td></tr>
+  <tr><td>이력 없는 신규 증상</td><td>7</td><td>LLM1 불충분 → LLM2 조사 → LLM3 통과 → 배정</td><td>LLM3</td></tr>
+  <tr><td>다른 기체 유사 사례</td><td>2</td><td>같은 모델 다른 기체 이력을 근거로 LLM2·LLM3 거쳐 배정</td><td>LLM3</td></tr>
+  <tr><td>같은 ATA·다른 JASC (LLM1 함정)</td><td>2</td><td>같은 ATA 이력이 있어도 JASC가 달라 LLM1이 연결하면 안 됨 → LLM2·LLM3 거쳐 배정</td><td>LLM3</td></tr>
+  <tr><td>모호한 증상</td><td>5</td><td>두 부서 이상에 걸침 → 재조사 2회 후 RETRY_LIMIT 또는 LLM3 HUMAN 판정</td><td>사람 검토</td></tr>
+  <tr><td>접수 단계 충돌</td><td>6</td><td>없는 등록부호, 다른 항공사, 퇴역 기체, 모델 불일치, 빈 증상 → 422 보완 안내</td><td>Spring (AI 미실행)</td></tr>
+</table>
+<p><b>실행 결과</b> (2026-10-21 18:00, 실제 gpt-5.4-mini · MCP · RabbitMQ, 시나리오당 1회 실행)</p>
+<table class="small" style="table-layout:fixed;font-size:7.6pt">
+  <colgroup><col style="width:5%"><col style="width:7%"><col style="width:17%"><col style="width:19%"><col style="width:9%"><col style="width:13%"><col style="width:17%"><col style="width:7%"><col style="width:6%"></colgroup>
+  <tr><th>번호</th><th>등록부호</th><th>기대 경로</th><th>실제 경로</th><th>기대 부서</th><th>실제 부서 / 사유</th><th>근거 ID (앞 3개)</th><th>시간</th><th>판정</th></tr>
+  {{scenario_rows}}
+</table>
+<table>
+  <tr><th style="width:38%">요약 항목</th><th>결과</th></tr>
+  <tr><td>기대 부서 일치 (모호한 증상 제외)</td><td><b>{{ok18}} / 18</b></td></tr>
+  <tr><td>LLM1에서 끝난 건수</td><td>{{llm1_end}} / 기대 7 (S01~S04, S23 정답. S05·S06은 조사 경로로 넘어감)</td></tr>
+  <tr><td>사람 검토 전환</td><td>{{human}}건 / 기대 5 (모호한 증상 S16 전환, S07은 실행 오류 SYSTEM_ERROR. S17~S20은 후보 부서 중 하나로 배정)</td></tr>
+  <tr><td>함정 S21·S22</td><td>LLM1이 같은 ATA·다른 JASC 이력(MH-001305, MH-001341)을 연결하지 않았고, 조사 경로에서 SDR 사례만 근거로 정답 부서 배정</td></tr>
+  <tr><td>평균 / 최대 처리 시간</td><td>{{avg}}초 / {{max}}초 (바로 배정 {{direct_avg}}초, 조사 경로 {{inv_avg}}초)</td></tr>
+  <tr><td>자동 배정률</td><td>{{auto_rate}}% ({{assigned}}/23). 통계 API 값은 당일 전체 누적 기준이라 이 실행 기준으로 계산</td></tr>
+  <tr><td>근거 출처</td><td>조사 경로 {{sdr_cases}}건 모두 SDR 사례(EV-SDR-*)를 근거로 사용, 바로 배정은 같은 기체 수리이력(MH-*)</td></tr>
+</table>
+<p class="small">시나리오 원문은 backend <code>seed/scenarios.md</code>. 같은 시나리오도 실행마다 판단이 달라질 수 있어 결과는 1회 실행 기준이다.</p>
+
+<h2>5.4 시연 순서와 실행 방법</h2>
+<ol>
+  <li>신고자 가입·로그인 → 반복 결함 신고(S23) → 바로 배정</li>
+  <li>신규 증상 신고(S10) → 조사·검토 진행 상황 → 판단 근거 화면(SDR 근거)</li>
+  <li>정비팀 거절 → 사람 검토 큐 → 통제사 수동 배정</li>
+  <li>다른 항공사 기체 신고 → 422 보완 안내</li>
+  <li>정비팀 로그인 → 대기함에서 수락·거절</li>
+  <li>AI 서버 장애 → DLQ → 사람 검토 전환</li>
+</ol>
+<pre>cd backend &amp;&amp; AI_MODE=rabbit docker compose up -d --build            # DB·큐·Backend·데이터 복원
+docker compose --env-file .env.mcp -f compose.mcp.yaml up -d --build  # agent 저장소: MCP 서버
+docker compose up -d --build                                         # llm 저장소: AI 서버
+pnpm install &amp;&amp; pnpm dev                                             # dashboard 저장소: http://localhost:5173</pre>
+<p class="small">필요한 환경변수(JWT_SECRET, MCP 위임 토큰 비밀키 2개, 조회 계정 비밀번호, LLM_API_KEY)는 저장소에 올리지 않는다.</p>
+
+<!-- ============================ 6 ============================ -->
+<h1>6. 주요 문제와 해결 방법, 미완성 기능 및 한계</h1>
+<h2>6.1 주요 문제와 해결 방법</h2>
+<table>
+  <tr><th style="width:34%">문제</th><th>해결 방법</th></tr>
+  <tr><td>SDR 운항사가 미국 항공사뿐이라 국내 항공사 기준 검색이 안 됨 (검색 0건, AI가 결과를 범위 위반으로 폐기)</td><td>검색 범위를 항공사 없이 정확한 모델 기준으로만 정함(운항사 NULL, 매핑 버전 기록). MCP와 AI 쪽 범위 검사 모두 이 정책을 허용</td></tr>
+  <tr><td>ATA 27(비행 조종)을 맡을 부서가 없음</td><td>비행 조종 부서(FCS)를 추가하고 수리이력 78건, 시나리오 S23, 기술자료 부서 매핑을 보강</td></tr>
+  <tr><td>접수 누락·충돌을 어디서 처리할지</td><td>AI 작업을 만들기 전에 Spring이 422로 필드별 보완 안내. 사람 검토로 보내지 않음</td></tr>
+  <tr><td>LLM 처리 시간이 길어 HTTP 동기 호출이 불안정</td><td>RabbitMQ로 바꾸고 DLQ, TTL, 시간 초과 감시로 실패를 사람 검토로 전환</td></tr>
+  <tr><td>MCP가 어떤 요청의 범위로 검색해야 하는지 전달 방법 (rag-mcp 전부 401)</td><td>Spring이 실행마다 검색 범위를 기록하고 서버별 위임 토큰을 발급, MCP가 토큰과 기록을 함께 검증</td></tr>
+  <tr><td>business-mcp가 요청 정보를 읽을 권한이 없음</td><td>필요한 8개 컬럼만 조회 권한을 여는 Flyway V6. 신고자 ID는 비공개</td></tr>
+  <tr><td>LLM1이 같은 기체의 무관한 이력을 근거로 바로 배정 (예: 브레이크 진동 ↔ 도어 보틀 압력)</td><td>증상만으로 ATA를 먼저 정하고 그 ATA 이력만 비교, 연결 이력마다 공통 대상 표현을 코드로 확인, 확인 안 되면 조사로 넘김</td></tr>
+  <tr><td>조사 단계가 RAG를 호출하지 않고 무관한 이력을 근거로 인용</td><td>LLM1이 연결하지 않은 이력은 LLM2에 숨기고 근거로 불인정, 근거 없이 결론을 쓰면 2회까지 반려. 이후 조사 경로 16건 모두 SDR 근거</td></tr>
+  <tr><td>모델 입력이 158,418 토큰으로 한도(128K) 초과</td><td>근거 원문·핵심 필드만 전달, 이력은 인용분 + 최근 20건, 도구 응답은 상태·범위·ID만</td></tr>
+  <tr><td>SDR·JASC 검색 대부분 0건 (모든 단어 일치 방식, 한국어 검색어)</td><td>넓은 검색은 단어 하나라도 맞으면 순위로, 도구 설명에 영어 핵심어 예시, 확인 안 된 JASC 힌트 제외</td></tr>
+  <tr><td>모델 출력 형식 오류로 실행 실패 (gpt-5.4-mini 23건 중 11건)</td><td>형식 오류 시 오류 내용을 알려 1회 재요청, 의미가 같은 입력(빈 선택 필드 등)은 허용. 실행 실패 1건 이하로 감소</td></tr>
+  <tr><td>LLM이 없는 근거 ID나 원문을 만들 위험</td><td>AI 서버가 발행 전 다시 조회하고 원문 포함 여부를 대조(의역된 발췌는 원문으로 교체), Spring이 배정 직전에 한 번 더 검증</td></tr>
+  <tr><td>rag-mcp 이미지 19.3GB, 빌드 지연</td><td>CPU 전용 PyTorch 고정과 빌드 캐시 분리로 2.03GB, 빌드 57초</td></tr>
+  <tr><td>대용량 RAG 데이터를 팀 공유 DB에 넣는 방법</td><td>공유 DB에 직접 넣지 않고 데이터만 담은 덤프를 Backend가 복원, 건수·해시 확인</td></tr>
+  <tr><td>저장소마다 임베딩 방식이 다를 위험</td><td>모델·리비전·접두어·창 크기를 한 설정으로 고정하고 manifest에 기록</td></tr>
+</table>
+
+<h2>6.2 미완성 기능</h2>
+<table>
+  <tr><th style="width:26%">기능</th><th>현재 상태와 대응</th></tr>
+  <tr><td>모호한 증상의 사람 검토 전환</td><td>모호한 증상 5건 중 1건만 사람 검토로 전환되고 4건은 후보 부서 중 하나로 배정됐다. LLM3가 부서 후보 충돌을 HUMAN으로 판정하는 기준 보강 필요</td></tr>
+  <tr><td>기술자료 검색(R04)</td><td>Safety First 61편과 부서 매핑이 DB에만 있고 도구와 AI 근거 출처에 없음. 기술자료가 필요한 판단은 보류 후 사람 검토</td></tr>
+  <tr><td>Harness 일부 항목</td><td>Token 사용량 집계, 대체 모델, LangSmith 추적 미적용. 프롬프트 파일 분리 필요</td></tr>
+  <tr><td>로그인 시도 제한</td><td>공개 로그인·가입 API에 시도 횟수 제한 없음. Redis 기반 제한 예정</td></tr>
+</table>
+
+<h2>6.3 한계</h2>
+<table>
+  <tr><th style="width:26%">한계</th><th>영향과 개선 방향</th></tr>
+  <tr><td>판단 편차</td><td>같은 시나리오도 실행마다 경로·부서가 달라질 수 있다(예: S05·S06이 실행에 따라 바로 배정 또는 조사 경로). 시나리오별 반복 실행으로 비율 평가 필요</td></tr>
+  <tr><td>신규 증상의 부서 선택</td><td>S07(항전 기대 → 사람 검토), S15(기계 계통 기대 → 엔진)처럼 계통이 겹치는 증상의 부서 선택이 기대와 다를 수 있다. 증상 → ATA → 부서 대응을 검증에 더 반영</td></tr>
+  <tr><td>검색 언어</td><td>SDR 전문검색은 영어 단어만 쓴다. 한국어 신고는 AI가 영어 핵심어로 바꿔야 하며, AMM 의미 검색만 한국어를 직접 받는다</td></tr>
+  <tr><td>Backend 근거 검증 범위</td><td>근거 ID의 존재와 기종 일치만 확인하고 증상과의 관련성은 AI 쪽 검증에 의존</td></tr>
+  <tr><td>AMM은 SDR의 인용 번호와 맥락</td><td>실제 매뉴얼 절차와 적용성은 확인할 수 없음. 정식 매뉴얼 연동 시 적용성 검증 추가</td></tr>
+  <tr><td>수리이력·계정이 목업</td><td>실제 운영 분포와 다를 수 있음. 실제 정비 이력으로 재검증. 시나리오 결과는 서비스 흐름 검증이며 실제 분류 정확도를 뜻하지 않음</td></tr>
+  <tr><td>business-mcp DB 직접 조회</td><td>레퍼런스 아키텍처와 다름(2.6). 의도한 선택으로 유지하되 권한·토큰으로 경계 보장</td></tr>
+  <tr><td>AI 서버 단일 인스턴스</td><td>체크포인트 잠금 때문에 확장 불가. Postgres 체크포인트 기준 다중 실행</td></tr>
+  <tr><td>실패 원인 가시성</td><td>보안상 실패 이벤트에 코드만 남아 원인 확인에 재현이 필요. 서버 로그에 예외 종류 기록 필요</td></tr>
+  <tr><td>배정 단위가 부서</td><td>부서 안 담당자 지정 없음. 담당자 지정·작업 분배 기능</td></tr>
+</table>
+
+</body>
+</html>

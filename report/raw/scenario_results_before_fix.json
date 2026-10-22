@@ -1,0 +1,781 @@
+{
+ "results": [
+  {
+   "sid": "S01",
+   "kind": "반복 결함",
+   "tail": "HL7701",
+   "symptom": "상승·강하할 때 조종실과 앞쪽 객실에서 퀴퀴한 양말 냄새가 계속 남. 연기나 연무는 보이지 않음.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "SYS",
+   "request_id": "7eb721ae-eeb8-4236-be5c-8d157c46925f",
+   "status": "HUMAN_REVIEW",
+   "dept": null,
+   "review_reason": "SYSTEM_ERROR",
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "HUMAN_REVIEW"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [],
+   "seconds": 10.846582,
+   "ok": false,
+   "summary": null
+  },
+  {
+   "sid": "S02",
+   "kind": "반복 결함",
+   "tail": "HL7702",
+   "symptom": "상승 중 8,000ft를 지날 때 ECAM DOOR L AFT EMER EXIT 경고가 떴다가 몇 초 만에 사라짐.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "STR",
+   "request_id": "041172a2-7ec6-4b52-a54d-3d97a132799e",
+   "status": "ASSIGNED",
+   "dept": "STR",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "52",
+   "linked": [
+    "MH-001453"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001453"
+   ],
+   "seconds": 4.741318,
+   "ok": true,
+   "summary": "현재 증상은 상승 중 ECAM DOOR L AFT EMER EXIT 경고가 잠깐 떴다가 사라진 것으로, 대상은 좌측 후방 비상탈출구 도어/도어 경고 계통입니다. 동일 기체 이력 중 MH-001453은 같은 ECAM 메시지(“DOOR L AFT EMER EXIT”)가 상승 중 나타났다 사라진 사례로 현재 증상과 대상이 직접 일치하며, MH-000890과 MH-000320은 각각 이륙/강하 중 같은 도어 근접 센서 경고 메시지가 발생한 같은 대상 계통 이력입니다. MH-000360도 도어 DETECTOR 관련 짧은 경고 사례로 같은 도어 감지 계통에 해당합니다. 이들 이력의 담당 부서는 모두 STR로, 현재 부서 범위(ATA 52 도어)와 맞습니다. 다만 과거 조치가 실제 원인 확정이라는 뜻은 아니며, 경고가 일시적으로 사라진 점에서 센서/근접 스위치/도어 정렬 등 가능성은 있으나 정비 절차나 운항 허가는 판단하지 않습니다. ATA 52로 분류 가능하므로 충분성은 True입니다."
+  },
+  {
+   "sid": "S03",
+   "kind": "반복 결함",
+   "tail": "HL7703",
+   "symptom": "부기장 산소마스크 마이크가 작동하지 않음. 인터폰 테스트 때 음성이 전달되지 않음.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "AVI",
+   "request_id": "df196f7b-43ba-41e0-aebd-e3d4abb88870",
+   "status": "ASSIGNED",
+   "dept": "AVI",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "23",
+   "linked": [
+    "MH-001487"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001487"
+   ],
+   "seconds": 3.661939,
+   "ok": true,
+   "summary": "현재 증상은 ‘부기장 산소마스크 마이크가 작동하지 않음, 인터폰 테스트 때 음성이 전달되지 않음’으로, 통신/인터폰 계통(ATA 23)과 직접 맞습니다. 동일 기체 HL7703의 이력 MH-001487도 ‘부기장 산소마스크 마이크 테스트 불가’로 대상이 같은 산소마스크 마이크이며, 현재 증상과 공통 대상 표현이 모두 ‘부기장 산소마스크 마이크’로 일치합니다. 이력의 담당 부서는 AVI였고, B03에서 AVI는 ATA 23을 담당하므로 현재 건도 AVI로 인계하는 것이 타당합니다. 다만 현재 건은 인터폰 음성 전달 불량까지 포함하고 있어 세부 증상 표현이 이력보다 조금 더 넓으며, 이력의 조치 성공 여부를 근거로 삼지는 않았습니다. ATA 33/31 후보는 보조적으로 제시되었지만, 현재 증상과 이력의 직접 연결 근거는 ATA 23이 가장 강합니다."
+  },
+  {
+   "sid": "S04",
+   "kind": "반복 결함",
+   "tail": "HL7704",
+   "symptom": "순항 FL350에서 APU 시동을 두 번 시도했는데 모두 실패함 (외기 -44℃).",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "ENG",
+   "request_id": "4163f0fb-701c-43f5-a419-3bfd89032fcf",
+   "status": "ASSIGNED",
+   "dept": "ENG",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "49",
+   "linked": [
+    "MH-001498",
+    "MH-000451",
+    "MH-000818"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001498",
+    "MH-000451",
+    "MH-000818"
+   ],
+   "seconds": 4.053495,
+   "ok": true,
+   "summary": "현재 증상은 \"순항 FL350에서 APU 시동을 두 번 시도했는데 모두 실패함\"으로, 대상은 APU 시동/APU 계통이다. 동일 기체 HL7704의 이력 중 MH-001498은 \"APU 시동을 세 번 시도했으나 모두 실패\"로 현재 증상과 같은 대상(APU 시동 실패)을 직접 공유하며 ATA 49, ENG 담당 이력이다. MH-000451도 \"순항 중 APU 이상 신고\"로 APU 계통 대상이 같고 ATA 49, ENG 담당이지만, 세부 현상은 '시동 실패'보다 넓은 '이상'이라 보조 근거로만 연결했다. MH-000818은 \"하부 동체 APU 냄새 발생\"으로 APU 대상은 같고 ATA 49, ENG 담당이지만 현재 증상과는 현상 차이(냄새 vs 시동 실패)가 있어 보조 연결이다. ATA 21 관련 공조 이력들은 APU 시동과 같은 대상이 아니어서 연결하지 않았다. 따라서 분류는 ATA 49가 타당하고, 담당 부서는 ENG로 제안한다. 외기 -44℃ 및 순항 중 시동 시도라는 조건 차이는 있으나 동일 APU 시동 실패 증상과 부서 범위를 설명하는 데 충분하다."
+  },
+  {
+   "sid": "S05",
+   "kind": "반복 결함",
+   "tail": "HL7705",
+   "symptom": "2번 승무원석 손전등이 켜지지 않음.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "CAB",
+   "request_id": "a5d530e6-afce-419a-b95f-32a27bec148e",
+   "status": "ASSIGNED",
+   "dept": "CAB",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "25",
+   "linked": [
+    "MH-001482",
+    "MH-001203",
+    "MH-000751"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001482",
+    "MH-001203",
+    "MH-000751"
+   ],
+   "seconds": 4.088727,
+   "ok": true,
+   "summary": "현재 증상은 ‘2번 승무원석 손전등이 켜지지 않음’으로, 동일 기체 HL7705의 과거 이력 중 손전등 자체를 대상으로 한 기록들과 직접 연결됩니다. MH-001482는 ‘전방 승무원 손전등이 깜빡거림’, MH-001203과 MH-000751은 모두 ‘상부 동체 손전등 이상 신고’로, 공통 대상 표현인 ‘손전등’이 현재 증상과 동일합니다. 이들 이력은 모두 ATA 25로 분류되어 있고 담당 부서도 CAB였습니다. 다만 현재는 ‘2번 승무원석’이라는 세부 위치가 추가되었고, 과거 이력은 전방/상부 동체로 표기되어 위치와 증상 강도는 완전 일치하지 않습니다. 그럼에도 대상 부품이 동일한 객실 비품 성격의 손전등이므로 ATA 25로 분류하는 근거가 충분하고, 담당 부서도 CAB가 적절합니다. ATA 33/24 후보는 전원·조명 계통 가능성 참고용일 뿐이며, 이력과 부서 근거가 더 직접적인 ATA 25를 우선했습니다."
+  },
+  {
+   "sid": "S06",
+   "kind": "반복 결함",
+   "tail": "HL7706",
+   "symptom": "게이트에서 APU 블리드를 켜면 객실에 퀴퀴한 양말 냄새가 남.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "ENG",
+   "request_id": "4da0d58c-b35c-4a46-b691-6534ae9d9075",
+   "status": "ASSIGNED",
+   "dept": "SYS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001483",
+    "MH-001388"
+   ],
+   "seconds": 11.916489,
+   "ok": false,
+   "summary": "게이트에서 APU 블리드를 사용할 때 객실에 퀴퀴한 양말 냄새가 남는 증상은 객실 공조/공기공급 계통(ATA 21) 관련 냄새 유입 또는 오염 가능성으로 조사하는 것이 적절합니다. 현재 기체 HL7706의 동일 계통 이력은 있어 재발 여부와 기존 조치의 잔류 효과를 확인할 필요가 있습니다.\n현재 증상은 게이트 지상 상태에서 APU bleed 사용 시 객실 냄새가 유입되는 현상으로, ATA 21 공조/공기공급 계통을 담당하는 SYS가 후속 조사를 시작하기에 충분합니다. 같은 기체 HL7706의 유사 냄새 이력(MH-001483)과 객실 공조 계통 연기 신고(MH-001388)가 확인되어 재발 여부를 검토할 근거도 있습니다. 다만 원인(오일/오염원/bleed 경로/pack·duct·heat exchanger 등)과 수리 방법은 아직 확정되지 않았으므로, 증상 재현 조건과 관련 계통 점검은 후속 조사에서 확인해야 합니다. 부서 적합성은 조회된 부서 목록상 SYS가 ATA 21을 담당하는 것으로 확인되었고, 별도 다른 부서 협조가 먼저 필요하다는 근거는 없습니다."
+  },
+  {
+   "sid": "S07",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7711",
+   "symptom": "이륙 회전 때 가속이 둔했고, 상승 중 플라이트 디렉터가 기수를 과하게 들도록 지시함.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "AVI",
+   "request_id": "fdbd23da-9e22-44d7-9aab-a10a403bd38e",
+   "status": "ASSIGNED",
+   "dept": "FCS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "27",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001530",
+    "MH-001571"
+   ],
+   "seconds": 12.21086,
+   "ok": false,
+   "summary": "이륙 회전 시 가속 둔화와 상승 중 플라이트 디렉터의 과도한 기수 올림 지시는 비행 조종 계통 이상으로 조사하는 것이 타당합니다. 현재 기체의 동일 이력에서는 직접 일치하는 고장 사례는 확인되지 않았지만, FCS가 ATA 27 담당 부서이므로 플라이트 디렉터/피치 지시 계통과 관련한 점검 인계가 필요합니다.\n현재 신고는 이륙 회전 시 가속 둔화와 상승 중 플라이트 디렉터의 과도한 기수 상승 지시라는 조종/지시 계통 증상으로, ATA 27 담당인 FCS 인계가 적절합니다. 최신 조회에서 동일 기체 이력(MH-001530, MH-001571)을 확인했지만, 직접 동일 증상은 아니며 과거 F/CTL 계열 이력일 뿐입니다. 따라서 사실과 추정을 구분했고, 다른 기체 SDR이나 타 ATA 사례로 혼동한 흔적은 없습니다. 인계 사유는 ‘FCS가 해당 계통을 담당하며, FD/피치 지시 이상 및 관련 BITE/경고 여부 확인이 필요하다’는 점으로 충분합니다. 다만 ECAM 경고는 현재 신고에 없고, 원인·수리 방법·운항 상태를 확정할 단계는 아닙니다. 부서가 인계 후 확인할 수 있는 수준의 추가 질문도 제시되어 있어 후속 조사 개시가 가능합니다."
+  },
+  {
+   "sid": "S08",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7719",
+   "symptom": "지상 이동 후 엔진을 끌 때 싱글 차임과 함께 비상구 표시등이 켜짐. 지상 전원으로 바꿀 때도 같은 현상.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "ELE",
+   "request_id": "b3d2677b-74e5-4acb-921a-c61100c829dc",
+   "status": "ASSIGNED",
+   "dept": "ELE",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "33",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001417"
+   ],
+   "seconds": 11.329153,
+   "ok": true,
+   "summary": "지상 이동 후 엔진 셧다운 시 싱글 차임과 함께 비상구 표시등이 점등되고, 지상 전원으로 전환해도 동일한 현상이 재현되는 전기/표시장치 계통 이상으로 보입니다. 현재 기체의 동일 대상 이력은 확인되지 않아 신규 증상으로 보고, ATA 33 담당 전기 부서가 표시등 회로와 관련 전원 전환 조건을 추가 확인해야 합니다.\n사실과 추정을 구분한 인계안으로 보이며, 현재 신고는 엔진 셧다운 및 지상전원 전환 시 모두 재현되는 '비상구 표시등 점등 + 싱글 차임'이라는 관찰 사실에 기반합니다. 동일 기체 이력에서 직접 일치 사례는 없고, MH-001417은 같은 기체의 전기 경고등 이력일 뿐 현재 증상과는 다르므로 혼동은 크지 않습니다. ATA 33/전기 부서(ELE) 관할도 조회상 적절합니다. 다만 현재 자료만으로는 원인(전원전환 로직, CB/릴레이, 표시등 회로, 차임 연동)이나 수리 방법을 확정하지 않았고, 운항 상태나 심각도를 과도하게 단정하지도 않았습니다. 후속 조사는 가능한 수준이며, 인계 후 비상구 표시등의 실제 점등 조건과 차임 발생 조건, 지상전원 투입·엔진 셧다운 시 재현성, 관련 전원/경고 로직을 추가 확인하면 됩니다."
+  },
+  {
+   "sid": "S09",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7709",
+   "symptom": "순항 중 ECAM ENG 2 OIL LO PR 경고가 잠깐 떴다가 사라짐. 오일 압력 지시가 순간적으로 떨어짐.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "ENG",
+   "request_id": "2ea22bf7-4a7f-4e6c-b06f-7a67e20283b0",
+   "status": "ASSIGNED",
+   "dept": "ENG",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "72",
+   "linked": [
+    "MH-001447"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001447"
+   ],
+   "seconds": 3.553788,
+   "ok": true,
+   "summary": "현재 증상은 순항 중 ECAM ENG 2 OIL LO PR 경고와 오일 압력 지시 순간 저하로, 엔진 윤활/오일 계통인 ATA 72와 직접 맞습니다. 동일 기체 이력 MH-001447도 엔진 관련 ATA 72로, 엔진 FAN BLADE 이상 신고가 있어 같은 엔진 계통의 과거 담당 부서가 ENG였음을 확인할 수 있습니다. 다만 과거 이력은 FAN BLADE 이상으로 현재의 오일 압력 경고와 대상 부품은 다르고, MH-001032는 엔진 EEC 결함으로 ATA 73이라 현재 증상과는 계통이 다르므로 연결하지 않았습니다. 현재 증상과 직접 대응되는 동일 기체의 ATA 72 이력이 최소 1건 있고, 담당 부서 범위도 ENG에 포함되므로 초기 분류와 인계 제안은 가능합니다. 다만 실제 원인과 정비 조치는 확정할 수 없습니다."
+  },
+  {
+   "sid": "S10",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7717",
+   "symptom": "착륙 후 지상 이동 중 브레이크를 밟을 때마다 기체 전체에 반복적인 진동과 덜컹거림이 느껴짐.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "HYD",
+   "request_id": "1f64dc20-524a-440c-a075-408409bee706",
+   "status": "ASSIGNED",
+   "dept": "HYD",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "32",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001497"
+   ],
+   "seconds": 11.75434,
+   "ok": true,
+   "summary": "착륙 후 지상 이동 중 제동 시 반복적인 전신 진동·덜컹거림이 보고되어, 브레이크/휠/착륙장치 계통(ATA 32)의 제동 진동 또는 바퀴 관련 이상 가능성을 우선 조사 대상으로 봐야 합니다.\n사실과 추정을 구분해 검토했으며, 접수 증상은 ‘착륙 후 지상 이동 중 브레이크 조작 시 반복 진동/덜컹거림’으로 ATA 32 계통 인계 사유가 충분합니다. 동일 기체 이력은 확인됐지만 현재 HISTORY(MH-001497)는 상부 동체 조명 관련으로 브레이크/휠/유압과 직접 관련이 없어 혼동하지 않았습니다. 부서 조회상 HYD는 ATA 29/32 담당이므로 인계 부서도 적절합니다. 다만 원인·심각도·수리 방법·운항 상태는 확정할 수 없고, 브레이크 재현성/좌우 편차/휠·브레이크 상태/유압 누설 여부는 인계 후 HYD가 확인해야 할 후속사항입니다. 현재 남은 정보는 인계를 막는 필수 결정보다는 후속 점검 항목에 해당합니다."
+  },
+  {
+   "sid": "S11",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7714",
+   "symptom": "순항 중 연료 점검에서 좌우 탱크 연료량이 약 1,000lbs 차이 남.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "SYS",
+   "request_id": "d110f723-ff31-458b-b766-c3ab417af137",
+   "status": "HUMAN_REVIEW",
+   "dept": null,
+   "review_reason": "VALIDATION_FAILED",
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "HUMAN_REVIEW"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "28",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [],
+   "seconds": 9.195785,
+   "ok": false,
+   "summary": "Unknown evidence id/source or non-original quote"
+  },
+  {
+   "sid": "S12",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7707",
+   "symptom": "접근 중 5,000ft부터 ECAM DOOR R AFT EMER EXIT(날개 위 비상구) 경고가 착륙까지 6번 반복되고 게이트에서도 계속 표시됨.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "STR",
+   "request_id": "446d662d-ffa7-42ed-91db-eed696334d87",
+   "status": "ASSIGNED",
+   "dept": "STR",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "52",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001475",
+    "MH-001462"
+   ],
+   "seconds": 11.688133,
+   "ok": true,
+   "summary": "A320-214 HL7707에서 접근 중부터 ECAM DOOR R AFT EMER EXIT 경고가 반복 발생하고 착륙 후에도 유지된 신고로, 도어/비상구 표시 계통의 센서·래치·표시 연동 이상 여부를 조사할 사안입니다.\n접수 증상은 동일 기체 HL7707의 접근 중/착륙 후 ECAM DOOR R AFT EMER EXIT 반복 표시로, 사실과 추정이 비교적 분리되어 있고 같은 기체 이력(MH-001475, MH-001462)은 도어/슬라이드 주변 정비 이력일 뿐 현재 경고와의 동일 증상으로 혼동되지 않았습니다. ATA 52 구조 계통과 도어/비상구 래치·스위치·배선 확인을 요구하는 인계 사유도 타당합니다. 다만 심각도, 원인, 수리 방법, 운항 상태는 현재 증상만으로 확정하지 않았고, 다른 기체 SDR/AMM을 핵심 근거로 쓰지도 않았습니다. STR이 담당 범위이며, 후속 확인은 우측 후방 비상구 도어의 경고 재현 여부, 래치/잠금 상태, 위치센서·스위치, 배선/커넥터, 착륙 후 지상 지속 표시 여부를 중심으로 진행하면 됩니다."
+  },
+  {
+   "sid": "S13",
+   "kind": "이력 없는 신규 증상",
+   "tail": "HL7708",
+   "symptom": "후방 갤리 2번 오븐이 작동하지 않고 오븐 차단기가 반복해서 트립됨.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "CAB",
+   "request_id": "66a46476-e8f2-4100-9a5f-3d2c89c1d397",
+   "status": "ASSIGNED",
+   "dept": "CAB",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "25",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001259"
+   ],
+   "seconds": 10.966636,
+   "ok": true,
+   "summary": "후방 갤리 2번 오븐이 작동하지 않으며 해당 오븐 차단기가 반복 트립되는 증상으로, 갤리/객실 장비 계통의 전원 또는 장비 내부 단락성 고장을 우선 의심하고 점검해야 합니다. 현재 기체의 기존 이력에서는 오븐·갤리 장비와 직접 연결되는 동일 대상 이력이 확인되지 않았습니다.\n현재 사실은 ‘후방 갤리 2번 오븐 미작동’과 ‘해당 차단기 반복 트립’이며, 증상 계통은 ATA 25로 분류되어 CAB 담당 범위에 들어갑니다. 최신 조사안은 동일 기체 이력에서 오븐/갤리 직접 이력을 찾지 못했다고 밝히며, 상부 동체 조명 이력(MH-001259)을 근거로 든 부분은 참고 수준일 뿐 현재 증상과 직접 연계되지는 않습니다. 모델/시점/구성 차이로 같은 기체 이력 혼동은 보이지 않았고, 현재 증상만으로 원인·수리 방법·운항 상태를 단정하지도 않았습니다. 후속 확인은 CAB가 시작할 수 있으며, 오븐 자체 전원 입력, 차단기 재현성, 배선/커넥터 손상, 동일 갤리 전원 공유 여부 확인이 필요합니다."
+  },
+  {
+   "sid": "S14",
+   "kind": "다른 기체 유사 사례",
+   "tail": "HL7716",
+   "symptom": "접근 속도로 줄일 때 기체 앞쪽에서 퀴퀴한 양말 냄새. PACK 1을 끄자 냄새가 사라짐.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "SYS",
+   "request_id": "c9015c3e-ca55-485f-bfd4-d5b20324e11e",
+   "status": "ASSIGNED",
+   "dept": "SYS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001303"
+   ],
+   "seconds": 11.787978,
+   "ok": true,
+   "summary": "접근 중 전방 객실 쪽의 퀴퀴한 냄새가 발생했고, PACK 1을 끄면 소실되는 공조/가압 공기계 증상으로 보입니다. 현재까지는 ATA 21 계통의 PACK 관련 냄새 유입 또는 오염 가능성을 우선 조사 대상으로 두되, 원인 확정은 하지 않습니다.\n원 신고는 A320-232 HL7716의 접근 중 전방 객실 냄새가 PACK 1 OFF로 소실되는 증상으로, ATA 21 공조/가압 계통의 후속 점검을 시작하기에 충분합니다. 사실과 추정이 구분되어 있으며, 동일 기체 이력(MH-001303)만 재발 참고로 사용했고 타 기체 SDR/이력과 혼동한 흔적은 없습니다. 제안 부서 SYS는 ATA 21 담당으로 적절합니다. 다만 현재 자료만으로 원인(오염/누설/필터/열교환기/드레인), 정확한 발생 위치, 재현 조건은 확정하지 않았고, 이는 SYS가 인계 후 확인할 수 있는 범위입니다. 운영 중지나 심각도 상승을 단정할 근거도 없습니다."
+  },
+  {
+   "sid": "S15",
+   "kind": "다른 기체 유사 사례",
+   "tail": "HL7718",
+   "symptom": "상승 중과 순항 중 한 번씩 ENG 1 FIRE LOOP A 결함 메시지가 나타남.",
+   "expected_path": "CLASSIFYING → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "SYS",
+   "request_id": "ead11949-05c2-4b38-a901-44c93b10635c",
+   "status": "HUMAN_REVIEW",
+   "dept": null,
+   "review_reason": "SYSTEM_ERROR",
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "HUMAN_REVIEW"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "79",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [],
+   "seconds": 10.017027,
+   "ok": false,
+   "summary": null
+  },
+  {
+   "sid": "S16",
+   "kind": "모호한 증상",
+   "tail": "HL7710",
+   "symptom": "강하 중 PACK에서 퀴퀴한 냄새가 나서 점검하니 우측 주착륙장치 휠웰부터 APU 흡입구까지 유압유 자국이 있음.",
+   "expected_path": "REVIEWING(SUPPLEMENT ×2) → HUMAN_REVIEW(RETRY_LIMIT) 또는 REVIEWING(HUMAN) → HUMAN_REVIEW(AGENT_NEEDS_HUMAN)",
+   "expected_dept": "후보 ENG / HYD / SYS (확정 안 됨)",
+   "request_id": "5787f6f5-236c-4b71-9e1f-d80a279f5612",
+   "status": "HUMAN_REVIEW",
+   "dept": null,
+   "review_reason": "VALIDATION_FAILED",
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "HUMAN_REVIEW"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [],
+   "seconds": 6.293209,
+   "ok": true,
+   "summary": "Unknown evidence id/source or non-original quote"
+  },
+  {
+   "sid": "S17",
+   "kind": "모호한 증상",
+   "tail": "HL7712",
+   "symptom": "APU 시동 직후 PACK 2 OVHT 경고와 함께 객실에 탄 냄새가 남.",
+   "expected_path": "REVIEWING(SUPPLEMENT ×2) → HUMAN_REVIEW(RETRY_LIMIT) 또는 REVIEWING(HUMAN) → HUMAN_REVIEW(AGENT_NEEDS_HUMAN)",
+   "expected_dept": "후보 SYS / ENG (확정 안 됨)",
+   "request_id": "2b763c7c-d1f2-4b41-93c4-63911151f1d7",
+   "status": "ASSIGNED",
+   "dept": "SYS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001007"
+   ],
+   "seconds": 8.827017,
+   "ok": false,
+   "summary": "APU 시동 직후 PACK 2 OVHT 경고와 객실 탄 냄새는 공조/공기조화 계통 이상으로 우선 조사해야 하며, bleed air 유입 경로와 PACK 2 자체 과열 여부를 함께 확인할 필요가 있습니다. 현재 동일 기체의 관련 이력은 조회상 보이지 않아 신규 증상으로 보고 조사합니다.\n원 신고의 핵심은 APU 시동 직후 PACK 2 OVHT 경고와 객실 탄 냄새로, ATA 21 공조/bleed air 계통 후속 조사를 SYS가 시작하는 것이 적절합니다. 최신 조사안은 동일 기체 이력에서 PACK 2 관련 직접 이력은 없음을 구분했고, MH-001007은 APU BAY 오염으로 현재 증상과 직접 동일시하지 않아 사실/추정을 혼동한 흔적은 크지 않습니다. 다만 현재 자료만으로 원인, 심각도, 수리 방법, 운항 가능 상태를 확정하지 않았고, APU bleed valve·ducting·PACK 2 온도/ECAM 기록 및 냄새 재현 여부는 후속 정비에서 확인 가능한 항목입니다. 동일 기체 이력과 부서 범위를 확인한 결과, 현 단계에서 인계에 필요한 사실과 질문은 충분합니다."
+  },
+  {
+   "sid": "S18",
+   "kind": "모호한 증상",
+   "tail": "HL7713",
+   "symptom": "기장 쪽 피토 히트 경고가 뜨고 좌우 속도계 값이 다르게 표시됨.",
+   "expected_path": "REVIEWING(SUPPLEMENT ×2) → HUMAN_REVIEW(RETRY_LIMIT) 또는 REVIEWING(HUMAN) → HUMAN_REVIEW(AGENT_NEEDS_HUMAN)",
+   "expected_dept": "후보 SYS / AVI (확정 안 됨)",
+   "request_id": "c20e30f2-5d54-47ef-9558-47a3d7d010e9",
+   "status": "ASSIGNED",
+   "dept": "AVI",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "34",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001126"
+   ],
+   "seconds": 10.959497,
+   "ok": false,
+   "summary": "기장 측 피토 히트 경고와 좌우 속도계 속도값 불일치가 보고됐다. 현재 자료상 동일 기체의 관련 이력은 보이지 않으며, 항전(AVI)에서 pitot/static 계통과 속도표시 불일치 여부를 확인해야 한다.\n원 신고의 증상은 기장 측 피토 히트 경고와 좌우 속도계 불일치로, ATA 34 항전 범위에 들어가며 현재 조회된 부서 목록상 AVI가 담당한다. LLM2는 동일 기체 이력과 타 기체 사례를 혼동하지 않았고, 사실(현재 증상)과 추정(피토/ADC/pitot-static 계통 가능성)을 대체로 구분했다. 또한 제공된 이력에서는 같은 기체의 ATA 34 관련 조치가 보이지 않아, AVI가 후속 진단을 시작할 충분한 근거가 있다. 다만 원인·수리 방법·운항 상태는 아직 확정할 수 없으므로, 부서는 계통 점검과 BITE/ECAM 확인을 통해 실제 결함 여부를 추가 확인해야 한다."
+  },
+  {
+   "sid": "S19",
+   "kind": "모호한 증상",
+   "tail": "HL7715",
+   "symptom": "착륙 후 1번 브레이크 온도가 비정상적으로 높게 표시되는데 육안으로는 과열 흔적이 없음.",
+   "expected_path": "REVIEWING(SUPPLEMENT ×2) → HUMAN_REVIEW(RETRY_LIMIT) 또는 REVIEWING(HUMAN) → HUMAN_REVIEW(AGENT_NEEDS_HUMAN)",
+   "expected_dept": "후보 HYD / AVI (확정 안 됨)",
+   "request_id": "ed24eff9-cdfe-4b53-8eac-b8dfbef2819c",
+   "status": "ASSIGNED",
+   "dept": "HYD",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "29",
+   "linked": [],
+   "reinvestigations": 1,
+   "evidence": [
+    "MH-001258"
+   ],
+   "seconds": 19.041509,
+   "ok": false,
+   "summary": "착륙 후 1번 브레이크 온도만 비정상적으로 높게 표시되지만 육안상 과열 흔적이 없어, 실제 브레이크 과열보다는 브레이크 온도 감지/표시 계통 이상 또는 착륙장치 관련 점검 대상 건으로 보입니다.\n현재 신고는 착륙 후 1번 브레이크 온도만 비정상 고표시되고 육안상 과열 흔적이 없다는 점에서, 실제 과열 가능성과 센서/표시 계통 이상 가능성을 함께 열어 둔 상태입니다. 동일 기체 이력에서 브레이크 관련 재발 사례는 없고, 확인된 과거 이력 MH-001258은 HYD SYS 펌프 결함으로 현재 증상과 계통·발생 단계가 달라 직접 원인 근거로 쓰지 않았습니다. 조회된 부서 범위상 HYD가 ATA 32를 담당하므로 인계 부서 선택은 적절하며, 현 단계에서 원인·수리 방법·운항 상태를 과도하게 단정한 흔적도 보이지 않습니다. 다만 인계 후에는 실제 브레이크 온도, 좌우 비교, 과열 흔적, 센서/배선/표시 계통 점검 결과를 확인해야 합니다."
+  },
+  {
+   "sid": "S20",
+   "kind": "모호한 증상",
+   "tail": "HL7714",
+   "symptom": "L1 도어 슬라이드 압력 낮음 경고가 승무원 패널에 표시됨. 도어는 정상적으로 잠겨 있음.",
+   "expected_path": "REVIEWING(SUPPLEMENT ×2) → HUMAN_REVIEW(RETRY_LIMIT) 또는 REVIEWING(HUMAN) → HUMAN_REVIEW(AGENT_NEEDS_HUMAN)",
+   "expected_dept": "후보 CAB / STR (확정 안 됨)",
+   "request_id": "e71bdaf1-6e78-4699-9194-e28734a3e085",
+   "status": "ASSIGNED",
+   "dept": "STR",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "52",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001439"
+   ],
+   "seconds": 10.579376,
+   "ok": false,
+   "summary": "L1 도어 슬라이드 압력 낮음 경고가 승무원 패널에 표시됐으며, 보고 시점에는 도어가 정상적으로 잠겨 있었다는 점에서 도어/슬라이드 계통의 경고성 이상으로 보입니다. 현재 기체의 동일 대상 이력은 확인되지 않았고, 동일 기체의 과거 정비 이력은 주로 ATA 32·구조·엔진 관련으로 현재 증상과 직접 연결되지 않습니다.\n현재 신고는 L1 도어 슬라이드 압력 낮음 경고로 ATA 52(도어/구조) 범주에 들어가며, 조회된 부서 목록상 STR이 해당 계통을 담당한다. 동일 기체 이력에서 확인된 사례는 브레이크/유압·구조·엔진 등 다른 계통으로, 같은 결함의 반복 이력으로 혼동한 흔적은 없다. 최신 조사안도 원인·수리방법·운항 상태를 과도하게 단정하지 않았고, 경고 발생 조건/재현 여부/잠금·전개 관련 기록/센서 상태 확인처럼 부서가 후속으로 확인할 수 있는 질문을 제시했다. 따라서 인계는 적절하며, 다만 실제 원인과 정비 조치 확정은 추가 현장 확인이 필요하다."
+  },
+  {
+   "sid": "S21",
+   "kind": "같은 ATA·다른 JASC (LLM1 함정)",
+   "tail": "HL7705",
+   "symptom": "착륙 후 BRAKES HOT 경고가 뜨고 2번 메인 휠 브레이크 온도가 다른 휠보다 높게 표시됨.",
+   "expected_path": "CLASSIFYING(sufficient=False, 연결 이력 없음) → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "HYD",
+   "request_id": "cf3164fd-baf8-4b73-81e8-581a5ab11d2c",
+   "status": "ASSIGNED",
+   "dept": "HYD",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "32",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001305"
+   ],
+   "seconds": 11.773102,
+   "ok": true,
+   "summary": "착륙 후 BRAKES HOT 경고와 2번 메인 휠 브레이크 온도 상승이 보고됐으며, 현재 기체에서 같은 부품의 과열/온도 편차가 실제 관찰된 것으로 보입니다. 현재까지 확인된 동일 기체 이력 중 직접적으로 같은 증상을 다룬 사례는 없고, 참고 가능한 ATA 32 이력은 착륙장치 경고(L/G NOT UPLOCKED) 수준입니다.\n현재 신고는 착륙 후 BRAKES HOT 경고와 2번 메인 휠 브레이크 온도 편차로, ATA 32 범위의 유효한 정비 인계 사유가 됩니다. 동일 기체 이력(MH-001305)은 착륙 후 L/G NOT UPLOCKED로 증상은 다르지만, 같은 기체의 ATA 32 참고 이력으로만 제한적으로 의미가 있습니다. 본 건에서는 원인·수리 절차를 단정하지 않았고, 브레이크 과열 가능성에 대한 현장 확인은 HYD가 후속 조사할 수 있습니다. 다만 실제 차종/구성 차이로 브레이크 냉각·드래그 원인 판단은 인계 후 확인이 필요합니다."
+  },
+  {
+   "sid": "S22",
+   "kind": "같은 ATA·다른 JASC (LLM1 함정)",
+   "tail": "HL7703",
+   "symptom": "순항 중 ECAM AIR PACK 1 FAULT가 뜨고 팩 출구 온도가 높게 표시됨.",
+   "expected_path": "CLASSIFYING(sufficient=False, 연결 이력 없음) → INVESTIGATING → REVIEWING(PASS) → ASSIGNED",
+   "expected_dept": "SYS",
+   "request_id": "10d41945-b63f-4ad0-816e-7c138ab1a5d2",
+   "status": "ASSIGNED",
+   "dept": "SYS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "INVESTIGATING",
+    "REVIEWING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": false,
+   "llm1_ata": "21",
+   "linked": [],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001341"
+   ],
+   "seconds": 10.83852,
+   "ok": true,
+   "summary": "순항 중 ECAM AIR PACK 1 FAULT와 PACK outlet temperature high가 보고된 공조 계통 이상으로 보이며, 현재 기체의 동일 계통 이력과 비교했을 때 유사한 온도 이상 신고는 있었으나 직접적인 PACK 1 경고 재발 이력은 확인되지 않았습니다. 조사 대상은 PACK 1 관련 센서/제어/밸브 동작과 공조 성능 저하 여부입니다.\n원 신고는 HL7703/A320-212의 순항 중 ECAM AIR PACK 1 FAULT 및 PACK outlet temperature high로, ATA 21 공조 계통 증상이다. 동일 기체 이력에서 객실 온도 상승(MH-001341)이 확인되어 같은 계통의 온도 이상 전례는 있으나, PACK 1 FAULT 재발 이력은 확인되지 않았다. 최신 조사안은 사실(현재 신고, 동일 기체 이력)과 추정(센서/밸브/유량 관련 가능성)을 구분했고, 타 기체 SDR을 혼동한 흔적은 없다. SYS 부서는 ATA 21을 담당하며 후속 조사 시작에 적합하다. 다만 실제 트리거와 센서/제어/밸브/유량 이상 여부는 미확정이므로, 지상 점검에서 BITE/ECAM fault 확인과 PACK 1 관련 구성품 점검이 필요하다."
+  },
+  {
+   "sid": "S23",
+   "kind": "반복 결함 (비행 조종)",
+   "tail": "HL7713",
+   "symptom": "접근 중 플랩을 CONF 1로 내리자 ECAM F/CTL FLAP SYS 1 FAULT가 또 뜨고 플랩이 느리게 내려감.",
+   "expected_path": "CLASSIFYING → sufficient=True → 배정 실행 → ASSIGNED",
+   "expected_dept": "FCS",
+   "request_id": "00caee4d-0bbb-42f2-b359-c552d6d76c54",
+   "status": "ASSIGNED",
+   "dept": "FCS",
+   "review_reason": null,
+   "stages": [
+    "QUEUED",
+    "CLASSIFYING",
+    "ASSIGNED"
+   ],
+   "llm1_sufficient": true,
+   "llm1_ata": "27",
+   "linked": [
+    "MH-001574",
+    "MH-001567"
+   ],
+   "reinvestigations": 0,
+   "evidence": [
+    "MH-001574",
+    "MH-001567"
+   ],
+   "seconds": 4.151501,
+   "ok": true,
+   "summary": "현재 증상은 접근 중 플랩을 CONF 1로 내릴 때 ECAM F/CTL FLAP SYS 1 FAULT가 재발하고 플랩이 느리게 내려가는 것으로, 플랩/비행조종계통(ATA 27)과 직접 일치한다. 동일 기체 이력 MH-001574와 MH-001567 모두 같은 대상 표현인 \"F/CTL FLAP SYS 1 FAULT\"와 \"플랩\"을 포함하고, 각각 플랩 작동 느림/표시 재발이 기록되어 현재 증상과 동일 계통·동일 대상의 반복 이력으로 연결할 수 있다. 두 이력의 담당 부서는 FCS로, 부서 책임 범위가 ATA 27이다. 다만 과거 조치 성공 여부는 현재 분류의 필수 조건이 아니며, 플랩이 느린 원인 자체나 세부 부품(SFCC 등)까지는 현재 정보만으로 확정하지 않는다. ATA 21이나 ATA 29는 증상에 비행조종 플랩 고장 메시지가 직접 있으므로 보조 연결 근거는 되지만, 현재 증상과의 직접 대상 일치는 ATA 27이 가장 강하다."
+  },
+  {
+   "sid": "V1",
+   "account": "reporter1@kal.test",
+   "tail": "HL7999",
+   "expected": "tail_number: NOT_FOUND",
+   "http": 422,
+   "details": [
+    {
+     "field": "tail_number",
+     "issue": "NOT_FOUND"
+    }
+   ]
+  },
+  {
+   "sid": "V2",
+   "account": "reporter1@kal.test",
+   "tail": "HL7701",
+   "expected": "airline_code: MISMATCH (expected KAL)",
+   "http": 422,
+   "details": [
+    {
+     "field": "airline_code",
+     "issue": "MISMATCH",
+     "expected": "KAL"
+    }
+   ]
+  },
+  {
+   "sid": "V3",
+   "account": "reporter1@aar.test",
+   "tail": "HL7702",
+   "expected": "aircraft_model: MISMATCH (expected A321-253N)",
+   "http": 422,
+   "details": [
+    {
+     "field": "aircraft_model",
+     "issue": "MISMATCH",
+     "expected": "A321-253N"
+    }
+   ]
+  },
+  {
+   "sid": "V4",
+   "account": "reporter1@aar.test",
+   "tail": "HL7720",
+   "expected": "tail_number: INACTIVE",
+   "http": 422,
+   "details": [
+    {
+     "field": "tail_number",
+     "issue": "INACTIVE"
+    }
+   ]
+  },
+  {
+   "sid": "V5",
+   "account": "reporter1@jna.test",
+   "tail": "HL7703",
+   "expected": "symptom_text: REQUIRED",
+   "http": 422,
+   "details": [
+    {
+     "field": "symptom_text",
+     "issue": "REQUIRED"
+    }
+   ]
+  },
+  {
+   "sid": "V6",
+   "account": "reporter1@aar.test",
+   "tail": "HL7701",
+   "expected": "tail_number: FORBIDDEN_AIRLINE (다른 항공사 기체)",
+   "http": 422,
+   "details": [
+    {
+     "field": "tail_number",
+     "issue": "FORBIDDEN_AIRLINE"
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "from": "1970-01-01T00:00:00Z",
+  "to": "2026-10-22T08:44:44.394325798Z",
+  "total": 101,
+  "by_status": {
+   "ASSIGNED": 58,
+   "HUMAN_REVIEW": 43
+  },
+  "by_department": {
+   "AVI": 6,
+   "CAB": 6,
+   "ELE": 3,
+   "ENG": 7,
+   "FCS": 9,
+   "HYD": 9,
+   "STR": 8,
+   "SYS": 10
+  },
+  "auto_assigned": 58,
+  "human_reviewed": 43,
+  "auto_assign_rate": 0.5742574257425742,
+  "avg_minutes_to_first_assignment": 0.16763718505747127
+ }
+}

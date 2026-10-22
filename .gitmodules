@@ -1,0 +1,12 @@
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/mro-agent-proj/dashboard
+[submodule "backend"]
+	path = backend
+	url = https://github.com/mro-agent-proj/backend.git
+[submodule "mcp"]
+	path = mcp
+	url = https://github.com/mro-agent-proj/agent
+[submodule "ai"]
+	path = ai
+	url = https://github.com/mro-agent-proj/LLM

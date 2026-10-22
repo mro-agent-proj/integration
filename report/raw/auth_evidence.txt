@@ -1,0 +1,22 @@
+## 1) 토큰 없이 호출 → 401
+$ curl http://localhost:8080/api/v1/me
+{"error":{"code":"UNAUTHORIZED","message":"인증이 필요합니다."}}  → HTTP 401
+
+## 2) 신고자가 관리자 API 호출 → 403 (역할 불일치)
+$ curl -H 'Authorization: Bearer <reporter1@kal.test>' http://localhost:8080/api/v1/reviews
+{"error":{"code":"FORBIDDEN","message":"권한이 없습니다."}}  → HTTP 403
+
+## 3) 같은 항공사의 다른 신고자가 남의 요청 조회 → 404 (존재 여부 숨김)
+$ curl -H 'Authorization: Bearer <reporter2@kal.test>' http://localhost:8080/api/v1/requests/7eb721ae-eeb8-4236-be5c-8d157c46925f
+{"error":{"code":"NOT_FOUND","message":"대상을 찾을 수 없습니다."}}  → HTTP 404
+
+## 4) 정비팀이 신고 접수 API 호출 → 403
+$ curl -X POST -H 'Authorization: Bearer <hyd@mro.test>' http://localhost:8080/api/v1/requests
+{"error":{"code":"FORBIDDEN","message":"권한이 없습니다."}}  → HTTP 403
+
+## 5) MCP를 토큰 없이 호출 → 401
+$ curl -X POST http://127.0.0.1:8101/mcp
+{"error":"unauthorized"}  → HTTP 401
+
+## 6) 비밀번호 오류 → 401 INVALID_CREDENTIALS
+{"error":{"code":"INVALID_CREDENTIALS","message":"이메일 또는 비밀번호가 올바르지 않습니다."}}  → HTTP 401

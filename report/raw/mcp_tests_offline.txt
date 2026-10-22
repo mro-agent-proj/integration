@@ -1,0 +1,2 @@
+$ uv run --extra dev pytest -q  (DB 없이)
+20 passed, 14 skipped in 0.14s

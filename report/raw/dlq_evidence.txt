@@ -1,0 +1,11 @@
+## 18:04:02 AI 서버 중지 후 상태
+mro.agent.run messages= 0 published= 138
+mro.agent.run.dlq messages= 0 published= 0
+## 18:04:02 요청 접수 22d2bbfc-7ac7-495c-932e-8bccff0857e6
+mro.agent.run messages= 0 published= 138
+## 18:09:02 요청 상태: HUMAN_REVIEW
+mro.agent.run messages= 1 published= 139
+mro.agent.run.dlq messages= 0 published= 0
+   09:04:02 None → QUEUED  USER 접수
+   09:09:02 QUEUED → HUMAN_REVIEW SYSTEM_ERROR SYSTEM AI 실행 요청이 DLQ로 이동 (처리 시간 안에 AI 서버가 가져가지 않음)
+RID=22d2bbfc-7ac7-495c-932e-8bccff0857e6
