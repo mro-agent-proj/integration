@@ -37,12 +37,12 @@ R05·Backend 최종 검증도 같은 목록을 따릅니다. R02 검색 범위 �
 | --- | --- | --- |
 | Backend | `c6479cf` | V11 및 수리이력 v2 1,600건, 서비스 200건 평가·채점 보정 |
 | dashboard | `1491195` | 기존 화면·API 유지, 현재 평가 입력 안내 |
-| agent | `bbb3a8b` | 기존 모델 범위·조회 계약 유지, B02 호출 역할 설명 정정 |
-| LLM | `ef80ec9` | LLM2 상태 격리·B02 차단, 체크포인트 버전 전환 안내 |
+| agent | `80554ce` | 기존 모델 범위·조회 계약 유지, B02 호출 역할 설명 정정 |
+| LLM | `d83ee96` | LLM2 상태 격리·B02 차단, 현재 평가 안내와 폐기된 평가셋 기록 분리 |
 
-선행 PR: [backend #18](https://github.com/mro-agent-proj/backend/pull/18), [LLM #8](https://github.com/mro-agent-proj/LLM/pull/8), [agent #14](https://github.com/mro-agent-proj/agent/pull/14), [dashboard #3](https://github.com/mro-agent-proj/dashboard/pull/3).
-각 하위 PR을 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이 바뀌면
-이 저장소의 gitlink와 위 표를 병합 커밋으로 함께 갱신해야 합니다. main 최신을 자동으로 추종하지 않습니다.
+2026-10-23 각 하위 저장소의 main에 위 커밋이 반영된 것을 확인한 조합입니다.
+다음 버전으로 갱신할 때도 하위 저장소 반영을 먼저 확인하고, 이 저장소의 gitlink와 위 표를 함께 갱신합니다.
+main 최신을 자동으로 추종하지 않습니다. 폐기된 평가셋의 성적·기대 분기는 [AI 과거 기록](ai/docs/archive/legacy-scenarios-2026-10-21.md)에 분리했으며 현재 평가에 사용하지 않습니다.
 
 ## 검증 상태 (2026-10-23)
 
