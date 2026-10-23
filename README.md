@@ -18,52 +18,73 @@
                                                                  └──▶ [rag-mcp]
 ```
 
-AI의 직접 배정 경로는 유지합니다. LLM1은 동일 기체 이력의 대상·현상·부정·상충을
-비교하고, 실행기가 각각의 원문 인용과 현재 부서 담당 범위를 검증합니다.
-추가 조사가 필요하면 LLM2에는 LLM1의 ATA·제안 부서·판단 설명을 넣지 않습니다.
-LLM3는 두 판단과 실제 근거를 비교해 통과·재조사·사람 검토를 결정합니다.
-설계와 검증 한계는 [AI 판단 분리 문서](ai/docs/contextual-handoff.md)에 있습니다.
+## 고정 조합과 역할 경계
 
-현재 조합은 SDR 모델 범위를 단계적으로 넓히고 LLM3가 기종 차이를 검토하는 버전입니다.
-LLM2 첫 R02 검색은 동일 기본 모델·ceo/neo 세대, 추가 조사는 같은 A320 계열의 Backend 허용 목록을 사용합니다.
-R05·Backend 최종 검증도 같은 목록을 따르며 최종 인계에 구성 미확인을 표시합니다.
-정확 모델 검색(EXACT)과 기존 NULL 정책의 정확 모델 동작은 유지합니다.
-자세한 계약은 [모델 검색 범위](ai/docs/MODEL_SCOPE.md)에 있습니다.
+LLM1의 동일 기체 이력 비교와 직접 배정 경로는 유지합니다. 조사로 전환하면 LLM2는
+LangGraph의 전용 `InvestigatorState`와 `llm2_context`만 받아 원본 신고·자체 RAG 자료로 판단합니다.
+LLM1 분류·수리이력·B02 조회 기록은 LLM2에 전달되지 않고 B02 호출 및 HISTORY 인용도 차단됩니다.
+`merge_for_review`가 LLM3 직전에 자료를 합치며 요청·버전·검색 범위·스냅샷을 검사합니다.
+LLM3의 이력 확인과 최종 B02/R05 검증은 유지합니다.
+
+재조사에는 LLM3 자유문장 대신 LLM2 자체 자료와 고정된 독립 재검토 지시를 사용합니다.
+상세 보완 과제를 안전하게 전달하는 계약은 후속 과제입니다. [AI 판단 분리 문서](ai/docs/contextual-handoff.md)를 참고하세요.
+
+R02 기본 검색은 동일 기본 모델·ceo/neo 세대, 추가 조사는 Backend가 허용한 A320 계열 범위입니다.
+R05·Backend 최종 검증도 같은 목록을 따릅니다. R02 검색 범위 확대와 LLM2 이력 격리는 별개의 규칙입니다.
+[모델 검색 범위 계약](ai/docs/MODEL_SCOPE.md)은 이번 변경에서 수정하지 않습니다.
 
 | 구성 | 고정 커밋 | 포함 변경 |
 | --- | --- | --- |
-| Backend | `4c54f97` | Flyway V11, 모델 허용 목록·context_version=2, 최종 근거 검증 |
-| dashboard | `3fa231e` | 기존 관리자 인원 현황 화면 |
-| agent | `9ed1484` | B01 범위 전달, R02 키워드·벡터 범위 확대, R05·AMM 인계 검증 |
-| LLM | `ce17850` | 기본 검색 선행, 확장 모델 검토, 최종 결과 표시 |
+| Backend | `c6479cf` | V11 및 수리이력 v2 1,600건, 서비스 200건 평가·채점 보정 |
+| dashboard | `1491195` | 기존 화면·API 유지, 현재 평가 입력 안내 |
+| agent | `bbb3a8b` | 기존 모델 범위·조회 계약 유지, B02 호출 역할 설명 정정 |
+| LLM | `ef80ec9` | LLM2 상태 격리·B02 차단, 체크포인트 버전 전환 안내 |
 
-[Backend PR #15](https://github.com/mro-agent-proj/backend/pull/15),
-[agent PR #13](https://github.com/mro-agent-proj/agent/pull/13),
-[LLM PR #6](https://github.com/mro-agent-proj/LLM/pull/6)을 먼저 병합한 뒤 이 통합 PR을 반영합니다.
-squash/rebase로 커밋이 달라지면 이 포인터들도 해당 병합 커밋으로 갱신합니다.
-진행 중 작업을 마친 뒤 Backend(V11)·MCP·AI를 함께 교체하고 새 작업을 받습니다.
-공유 DB 마이그레이션·시드는 Backend가 수행하며 기존 임베딩은 다시 만들지 않습니다.
+선행 PR: [backend #18](https://github.com/mro-agent-proj/backend/pull/18), [LLM #8](https://github.com/mro-agent-proj/LLM/pull/8), [agent #14](https://github.com/mro-agent-proj/agent/pull/14), [dashboard #3](https://github.com/mro-agent-proj/dashboard/pull/3).
+각 하위 PR을 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이 바뀌면
+이 저장소의 gitlink와 위 표를 병합 커밋으로 함께 갱신해야 합니다. main 최신을 자동으로 추종하지 않습니다.
 
-로컬 검증: Backend 43건, 실제 PostgreSQL·조회 전용 계정·MCP HTTP/JWT를 포함한 agent 47건,
-합성 모델·도구를 사용한 AI 168건, 통합 스크립트 3건 통과.
-실제 OpenAI 분류 정확도 및 전체 실서비스 200건 평가, 공유 DB 적용은 이번 변경에서 실행하지 않았습니다.
+## 검증 상태 (2026-10-23)
 
-`python3 -m unittest discover -s scripts/tests -v`는 Docker나 외부 접속 없이 준비 대기 만료와
-각 서비스 health check 실패 시 비정상 종료되는지 검사하며 통합 CI에서도 실행합니다.
-이 조합의 실제 모델·MCP HTTP·RabbitMQ 전체 종단간 시나리오는 아직 실행하지 않았습니다.
+실제 Backend → RabbitMQ → AI(gpt-5.4-mini) → HTTP MCP → Docker PostgreSQL 경로로
+서비스 시나리오 200건과 별도 접수 검증 6건을 실행했습니다. 시스템 오류·클라이언트 시간 초과 0건,
+접수 검증 6/6, LLM2 HISTORY 기록·B02 호출 0건이었습니다. AI 단위·회귀 테스트는 173건 통과했습니다.
 
-진행 중인 AI 실행을 마친 후 버전을 교체하세요. 구버전 직접 배정 checkpoint에
-새 맥락 비교 자료가 없으면 최종 검증에서 사람 검토로 전환됩니다.
-R02의 이전 커서는 재사용할 수 없으며 새 검색으로 시작해야 합니다.
-하이브리드 검색은 단어·벡터 각각 상위 50건의 고정 합집합을 페이지로 나눕니다.
-순위나 검색 방식이 바뀌면 기존 offset을 적용하지 않고 `INVALID_CURSOR`를 반환합니다.
+| 지표 | 결과 | 범위 |
+| --- | --- | --- |
+| 전체 평가 통과 | 97/200 (48.5%) | 기대 상태·허용 부서·금지 이력 조건 |
+| 자동배정 정밀도 | 96/145 (66.2%) | 사람 검토 기대인데 배정한 2건도 분모·실패에 포함 |
+| LLM2 마지막 부서 일치 | 71/82 (86.6%) | 조사 출력이 있고 부서 배정이 정답인 사례 |
+| 정답 부서 예측 후 보류 | 42건 | 적절한 사람 검토인지 별도 판단 필요; 성공에 합산하지 않음 |
 
-서비스 평가셋은 `backend/data/eval/service/scenarios.jsonl`에 있습니다(A 64/B 96/C 16/D 24,
-dev 80/test 120). 기체·항공사·정확 모델, 부서 코드, 이력 참조를 현재 업무 시드와 대조했고
-새 인원 현황 변경과의 파일 충돌은 없습니다. 원본 평가셋은 변경하지 않았습니다.
-정답 라벨은 154건이 `not_reviewed`, 31건이 `needs_final_review`, 15건이 `decided`입니다.
-`expected`, `source`, `label_check`는 평가 메타데이터이며 AI 입력에 포함하지 않습니다.
-`model_match=family` 54건도 RAG의 정확 모델 검색 범위를 넓히라는 지시로 해석하지 않습니다.
+200건 실행 이후 추가된 변경은 안내 문서와 오프라인 채점·파일 버전 검사입니다. 서비스 실행 코드와
+시드·평가 입력은 해당 실행 기준 그대로입니다. 기존 결과 200건을 새 채점기로 다시 집계해 수치를 확인했습니다.
+공유 DB에 대한 배포·복원을 수행했다는 의미는 아닙니다.
+
+최초 로컬 검증에서는 Backend 의존성 다운로드 오류 때문에 호스트의 Gradle 캐시로 최신 소스를 빌드해
+런타임 이미지를 만들었습니다. 따라서 이 평가만으로 새 환경의 Docker 온라인 빌드 성공까지 보장하지 않습니다.
+로컬 `.local-runtime-build` / `compose.override.yaml`은 배포 구성에 포함하지 않으며 팀 실행은 저장소 Dockerfile을 사용합니다.
+
+통합 CI는 시작 스크립트의 실패 처리, 데이터 전달본 경로와 Backend 오프라인 채점·manifest 계약을 검사합니다.
+실제 모델 호출·서비스 연결·실행 DB의 내용 검증은 별도입니다. 평가 정의는 [서비스 평가 README](backend/data/eval/service/README.md)를 따릅니다.
+
+서비스 평가셋은 A 64/B 96/C 16/D 24, dev 80/test 120입니다. 라벨은 `not_reviewed` 161,
+`needs_final_review` 24, `decided` 15건입니다. `expected`, `source`, `label_check`는 AI 입력에 포함하지 않습니다.
+실제 항공사 운영 성능이나 개선 전후 성능으로 일반화하지 않습니다.
+
+## 기존 환경 갱신
+
+1. 신규 접수를 중단하고 진행 중인 AI 실행·이벤트 반영을 완료합니다. `up.sh`는 실행을 자동으로 비우지 않습니다.
+2. `git pull` 후 `git submodule update --init --recursive`로 검증된 포인터를 받습니다. 로컬 변경이 있으면 먼저 보존합니다.
+3. Backend DB의 업무 시드 버전을 확인합니다. users가 있으면 SeedLoader가 업무 시드를 건너뛰므로,
+   CSV 교체·이미지 재빌드만으로 기존 이력이 v2로 변경되지 않습니다. Backend 담당자의 갱신 절차나 별도 빈 평가 DB를 사용합니다.
+4. DB·RabbitMQ·AI 상태 볼륨을 보존하고 `./scripts/up.sh`로 이미지를 재빌드합니다.
+   구버전 workflow 체크포인트는 `llm123-isolated-v2` / `llm23-isolated-v2`에서 자동 승계하지 않습니다.
+   미완료 구버전 요청은 담당자가 결과·이벤트 상태를 확인하고 복구 방식을 결정합니다.
+5. 네 서비스 health와 AI의 `AI_MODE=rabbit`, 두 MCP의 조회 계정·위임 토큰 설정을 확인한 뒤 접수를 재개합니다.
+
+RAG 전달본은 기존 `data-2026-10-22`를 유지합니다. 이번 격리 변경 때문에 재임베딩이나 새로운 Flyway DDL은 필요하지 않습니다.
+R02 검색 정책·색인이 달라진 이전 커서는 재사용하지 않고 새 검색을 시작합니다.
 
 ## 처음 받기
 
@@ -96,7 +117,7 @@ cd mro-agent-integration
 시드 계정은 모두 비밀번호 `test1234`입니다. 신고자 `reporter1@kal.test`, 정비팀 `sys@mro.test`·`fcs@mro.test` 등, 관리자 `admin@mro.test`. 전체 목록은 `backend/data/seed/users.csv`.
 
 - AI 없이 화면만 보려면 `cd backend && docker compose up -d` (기본 `AI_MODE=mock`, 키워드 기반 가짜 판단).
-- 처음부터 다시: `cd backend && docker compose down -v` 후 `./scripts/up.sh`. 시드·RAG는 자동으로 다시 적재되고, 그동안 만든 요청·가입 계정은 지워집니다.
+- 기존 DB·큐·AI 상태 볼륨은 삭제하지 않습니다. 데이터 교체는 위의 기존 환경 갱신 절차를 따릅니다.
 
 ## 데이터
 
@@ -115,19 +136,28 @@ git에 있는 데이터 (backend 레포 `data/` 아래):
 
 | 폴더 | 내용 |
 | --- | --- |
-| `backend/data/seed/` | 항공사 3, 기체 20, 부서 8, 계정 15, 수리이력 1,577 |
-| `backend/data/eval/scenario/` | 통합 평가셋: 손으로 만든 한국어 시나리오 23건 + 접수 검증 6건 |
+| `backend/data/seed/` | 항공사 3, 기체 20, 부서 8, 계정 15, 수리이력 v2 1,600 |
+| `backend/data/eval/service/` | 현재 통합 평가 200건과 시드·평가셋 파일 manifest |
+| `backend/data/eval/scenario/` | 접수 검증 6건 + 과거 23건 설명(실행용 JSONL 삭제) |
 | `backend/data/eval/sdr/` | 단위 평가셋: FAA 공개 SDR 2019~2020 기반 검색 400 · LLM1 분류 200 · LLM2 부서 200 · JASC 매핑 548 |
 
 ## 평가
 
-스택을 띄운 상태에서 평가셋을 실제로 보내 채점합니다. 요청이 DB에 쌓이고 OpenAI 비용이 듭니다(23건 약 6분).
+스택을 띄운 상태에서 실제 요청을 보내므로 DB에 기록이 쌓이고 OpenAI 비용이 발생합니다.
+단일 AI 소비자에서는 순차 실행을 기본으로 합니다. 병렬 접수는 큐 대기로 TTL과 평가 시간 제한을 초과할 수 있습니다.
 
 ```bash
-cd backend && python3 scripts/scenario_eval.py      # 통합 평가, 결과: backend/data/eval/scenario/results/<시각>.json
+cd backend
+python3 scripts/scenario_eval.py --workers 1           # 200건 + 접수 검증 6건
+python3 scripts/scenario_eval.py --split test --workers 1
+python3 scripts/scenario_eval.py --only SV-A-001,SV-B-002,V2
 ```
 
-배정 정답, 사람 검토 전환, 경로 일치, 자동 배정률, 평균 소요, 접수 검증 일치를 출력합니다. 항목 설명은 `backend/data/eval/scenario/README.md`. 단위 평가셋(`sdr/`)의 지표와 사용법은 `backend/data/eval/sdr/README.md`.
+기본 결과는 `backend/data/eval/service/results/<시각>.json`입니다. [채점 정의](backend/data/eval/service/README.md)는
+잘못된 부서·금지 이력·사람 검토 누락을 구분하며, 자동배정 정밀도에는 모든 ASSIGNED 결과를 포함합니다.
+추적 조회 실패나 FINAL 누락은 평가 오류로 남겨 통과시키지 않습니다. 정상 HUMAN_REVIEW의 근거 목록 생략은 허용합니다.
+실행 전 `maintenance_history_v2.csv`와 DB 이력의 동일성을 확인하세요. manifest/CI는 파일 조합만 검사합니다.
+단위 평가(`sdr/`)의 사용법은 [별도 README](backend/data/eval/sdr/README.md)를 참고하세요.
 
 ## 최종 결과보고서
 
@@ -146,5 +176,6 @@ cd backend && python3 scripts/scenario_eval.py      # 통합 평가, 결과: bac
   ./scripts/up.sh                        # 동작 확인
   git add frontend backend mcp ai && git commit -m "submodule: <무엇을 맞췄는지>"
   ```
-- 데이터가 바뀌면 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 이 표를 고칩니다.
-- `.env`·키·덤프 파일은 커밋하지 않습니다.
+- RAG 전달본이 바뀌면 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 이 표를 고칩니다.
+- 업무 시드·서비스 평가셋이 바뀌면 Backend의 manifest와 안내를 함께 갱신합니다. RAG 전달본 변경과 구분합니다.
+- `.env`·키·덤프 파일·개인 평가용 compose override는 커밋하지 않습니다. 변경은 별도 브랜치와 PR로 제출하고 main에 직접 push하지 않습니다.

@@ -1,6 +1,6 @@
 name: Check
 
-# 네 레포의 테스트는 각 레포 CI가 돌립니다. 여기서는 통합 레포 자체만 가볍게 확인합니다.
+# 서비스별 테스트는 각 레포 CI가 돌립니다. 여기서는 통합 스크립트와 고정된 데이터·채점 계약을 확인합니다.
 on:
   pull_request:
   push:
@@ -25,6 +25,8 @@ jobs:
           shellcheck scripts/*.sh
       - name: Startup failure regression tests
         run: python3 -m unittest discover -s scripts/tests -v
+      - name: Pinned backend evaluation and seed contract
+        run: python3 -m unittest discover -s backend/scripts/tests -v
       - name: Data packages match the pinned backend
         run: bash scripts/check-data-version.sh
       - name: No secrets or dumps committed
