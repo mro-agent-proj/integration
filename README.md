@@ -33,12 +33,13 @@ AI 포인터 `cd33f17`은 병합된 [LLM PR #5](https://github.com/mro-agent-pro
 | dashboard | `3fa231e` | 관리자 인원 현황 화면 |
 | agent | `1182627` | R02 페이지 순위 고정·커서 검증 + 실제 업무 DB 연결 필수 CI |
 
-Backend·agent 변경을 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이
+[Backend PR #14](https://github.com/mro-agent-proj/backend/pull/14)와
+[agent PR #12](https://github.com/mro-agent-proj/agent/pull/12)를 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이
 달라지면 submodule 포인터도 해당 병합 커밋으로 갱신해야 합니다.
 공유 DB 마이그레이션과 시드 적재는 기존처럼 Backend가 수행합니다.
 
-로컬 검증: Backend 40건, agent RAG/공통 테스트 42건(별도 업무 DB 테스트 1건 skip),
-별도 Backend Flyway DB의 business 테스트 **17건 전부 통과**, 시작 스크립트 회귀 테스트 3건 통과.
+로컬 검증: Backend 40건, RAG·Backend Flyway 업무 DB를 모두 연결한 agent 전체 **43건 skip 없이 통과**,
+시작 스크립트 회귀 테스트 3건 통과.
 dashboard `3fa231e`는 타입 검사·빌드를 통과한 버전입니다.
 `python3 -m unittest discover -s scripts/tests -v`는 Docker나 외부 접속 없이 준비 대기 만료와
 각 서비스 health check 실패 시 비정상 종료되는지 검사하며 통합 CI에서도 실행합니다.
