@@ -24,23 +24,30 @@ AI의 직접 배정 경로는 유지합니다. LLM1은 동일 기체 이력의 �
 LLM3는 두 판단과 실제 근거를 비교해 통과·재조사·사람 검토를 결정합니다.
 설계와 검증 한계는 [AI 판단 분리 문서](ai/docs/contextual-handoff.md)에 있습니다.
 
-AI 포인터 `cd33f17`은 병합된 [LLM PR #5](https://github.com/mro-agent-proj/LLM/pull/5)의
-구현입니다. 이번 조합은 아래 변경을 함께 연결합니다.
+현재 조합은 SDR 모델 범위를 단계적으로 넓히고 LLM3가 기종 차이를 검토하는 버전입니다.
+LLM2 첫 R02 검색은 동일 기본 모델·ceo/neo 세대, 추가 조사는 같은 A320 계열의 Backend 허용 목록을 사용합니다.
+R05·Backend 최종 검증도 같은 목록을 따르며 최종 인계에 구성 미확인을 표시합니다.
+정확 모델 검색(EXACT)과 기존 NULL 정책의 정확 모델 동작은 유지합니다.
+자세한 계약은 [모델 검색 범위](ai/docs/MODEL_SCOPE.md)에 있습니다.
 
 | 구성 | 고정 커밋 | 포함 변경 |
 | --- | --- | --- |
-| Backend | `f6e5f3a` | main의 서비스 평가셋 200건 + 팀 인원 현황 API·시드·Flyway V10 |
-| dashboard | `3fa231e` | 관리자 인원 현황 화면 |
-| agent | `1182627` | R02 페이지 순위 고정·커서 검증 + 실제 업무 DB 연결 필수 CI |
+| Backend | `4c54f97` | Flyway V11, 모델 허용 목록·context_version=2, 최종 근거 검증 |
+| dashboard | `3fa231e` | 기존 관리자 인원 현황 화면 |
+| agent | `9ed1484` | B01 범위 전달, R02 키워드·벡터 범위 확대, R05·AMM 인계 검증 |
+| LLM | `ce17850` | 기본 검색 선행, 확장 모델 검토, 최종 결과 표시 |
 
-[Backend PR #14](https://github.com/mro-agent-proj/backend/pull/14)와
-[agent PR #12](https://github.com/mro-agent-proj/agent/pull/12)를 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이
-달라지면 submodule 포인터도 해당 병합 커밋으로 갱신해야 합니다.
-공유 DB 마이그레이션과 시드 적재는 기존처럼 Backend가 수행합니다.
+[Backend PR #15](https://github.com/mro-agent-proj/backend/pull/15),
+[agent PR #13](https://github.com/mro-agent-proj/agent/pull/13),
+[LLM PR #6](https://github.com/mro-agent-proj/LLM/pull/6)을 먼저 병합한 뒤 이 통합 PR을 반영합니다.
+squash/rebase로 커밋이 달라지면 이 포인터들도 해당 병합 커밋으로 갱신합니다.
+진행 중 작업을 마친 뒤 Backend(V11)·MCP·AI를 함께 교체하고 새 작업을 받습니다.
+공유 DB 마이그레이션·시드는 Backend가 수행하며 기존 임베딩은 다시 만들지 않습니다.
 
-로컬 검증: Backend 40건, RAG·Backend Flyway 업무 DB를 모두 연결한 agent 전체 **43건 skip 없이 통과**,
-시작 스크립트 회귀 테스트 3건 통과.
-dashboard `3fa231e`는 타입 검사·빌드를 통과한 버전입니다.
+로컬 검증: Backend 43건, 실제 PostgreSQL·조회 전용 계정·MCP HTTP/JWT를 포함한 agent 47건,
+합성 모델·도구를 사용한 AI 168건, 통합 스크립트 3건 통과.
+실제 OpenAI 분류 정확도 및 전체 실서비스 200건 평가, 공유 DB 적용은 이번 변경에서 실행하지 않았습니다.
+
 `python3 -m unittest discover -s scripts/tests -v`는 Docker나 외부 접속 없이 준비 대기 만료와
 각 서비스 health check 실패 시 비정상 종료되는지 검사하며 통합 CI에서도 실행합니다.
 이 조합의 실제 모델·MCP HTTP·RabbitMQ 전체 종단간 시나리오는 아직 실행하지 않았습니다.
