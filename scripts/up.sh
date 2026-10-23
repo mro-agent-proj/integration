@@ -11,12 +11,30 @@ done
 
 (cd "$ROOT/backend" && AI_MODE=rabbit docker compose up -d --build)   # rag-restore가 데이터 복원 후 종료
 echo "backend 준비 대기..."
-for _ in $(seq 1 60); do curl -sf http://127.0.0.1:8080/actuator/health >/dev/null && break; sleep 3; done
+backend_ready=false
+for _ in $(seq 1 60); do
+  if curl --connect-timeout 2 --max-time 3 -sf http://127.0.0.1:8080/actuator/health >/dev/null; then
+    backend_ready=true
+    break
+  fi
+  sleep 3
+done
+if [ "$backend_ready" != true ]; then
+  echo "backend 준비 시간 초과: backend 로그와 RAG 복원 상태를 확인하세요." >&2
+  exit 1
+fi
 (cd "$ROOT/mcp" && docker compose --env-file .env.mcp -f compose.mcp.yaml up -d --build --wait)
 (cd "$ROOT/ai" && docker compose up -d --build --wait)
 
-curl -sf http://127.0.0.1:8080/actuator/health >/dev/null && echo "backend  :8080 OK"
-curl -sf http://127.0.0.1:8101/health/ready >/dev/null && echo "business :8101 OK"
-curl -sf http://127.0.0.1:8102/health/ready >/dev/null && echo "rag      :8102 OK"
-curl -sf http://127.0.0.1:8100/health/ready >/dev/null && echo "ai       :8100 OK"
+for service in backend:8080 business:8101 rag:8102 ai:8100; do
+  name="${service%:*}"
+  port="${service#*:}"
+  path=/health/ready
+  [ "$name" != backend ] || path=/actuator/health
+  if ! curl --connect-timeout 2 --max-time 3 -sf "http://127.0.0.1:$port$path" >/dev/null; then
+    echo "$name :$port 상태 확인 실패" >&2
+    exit 1
+  fi
+  echo "$name :$port OK"
+done
 echo "화면: cd frontend && pnpm install && pnpm dev  →  http://localhost:5173"
