@@ -8,7 +8,7 @@
 | `frontend/` | [dashboard](https://github.com/mro-agent-proj/dashboard) | 신고자·정비팀·관리자 화면 (Vue 3, :5173) |
 | `backend/` | [backend](https://github.com/mro-agent-proj/backend) | 계정·요청·배정, DB·RabbitMQ, MCP 토큰 발급 (Spring Boot, :8080) |
 | `mcp/` | [agent](https://github.com/mro-agent-proj/agent) | business-mcp(:8101)·rag-mcp(:8102), 읽기 전용 |
-| `ai/` | [LLM](https://github.com/mro-agent-proj/LLM) | LLM1 분류 → LLM2 조사 → LLM3 검토 (FastAPI + LangGraph, :8100) |
+| `ai/` | [LLM](https://github.com/mro-agent-proj/LLM) | LLM1 맥락 분류 → LLM2 독립 조사 → LLM3 판단·근거 대조 (FastAPI + LangGraph, :8100) |
 | `report/` | 이 레포 | 최종 결과보고서(PDF·HTML), 화면 캡처, 테스트 원자료, 트러블슈팅 |
 
 ```
@@ -17,6 +17,20 @@
                       └──── mro.agent.events ◀──────────────────┤──▶ [business-mcp]
                                                                  └──▶ [rag-mcp]
 ```
+
+AI의 직접 배정 경로는 유지합니다. LLM1은 동일 기체 이력의 대상·현상·부정·상충을
+비교하고, 실행기가 각각의 원문 인용과 현재 부서 담당 범위를 검증합니다.
+추가 조사가 필요하면 LLM2에는 LLM1의 ATA·제안 부서·판단 설명을 넣지 않습니다.
+LLM3는 두 판단과 실제 근거를 비교해 통과·재조사·사람 검토를 결정합니다.
+설계와 검증 한계는 [AI 판단 분리 문서](ai/docs/contextual-handoff.md)에 있습니다.
+
+이 변경의 AI 포인터는 [LLM PR #5](https://github.com/mro-agent-proj/LLM/pull/5)의
+`cd33f17`입니다. LLM PR을 먼저 반영하고, squash/rebase로 커밋이 달라지면
+통합 PR의 AI 포인터도 병합된 커밋으로 맞춥니다.
+로컬에서는 AI 테스트·합성 자료를 사용한 실제 모델 점검과 데이터 전달본 버전 검사를 했으며,
+이 조합의 실제 MCP·공유 DB·RabbitMQ 전체 통합 실행은 아직 검증하지 않았습니다.
+진행 중인 AI 실행을 마친 후 버전을 교체하세요. 구버전 직접 배정 checkpoint에
+새 맥락 비교 자료가 없으면 최종 검증에서 사람 검토로 전환됩니다.
 
 ## 처음 받기
 
