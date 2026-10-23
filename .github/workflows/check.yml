@@ -23,6 +23,8 @@ jobs:
         run: |
           bash -n scripts/*.sh
           shellcheck scripts/*.sh
+      - name: Data packages match the pinned backend
+        run: bash scripts/check-data-version.sh
       - name: No secrets or dumps committed
         run: |
           ! git ls-files | grep -E '(^|/)\.env(\.mcp)?$|\.dump$|\.tar$'

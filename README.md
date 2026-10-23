@@ -26,7 +26,10 @@ cd mro-agent-integration
 ./scripts/fetch-data.sh          # RAG 전달본·원문 데이터 (gh 로그인 필요)
 ```
 
-이미 받은 상태에서 각 레포 최신으로 맞추기: `git pull && git submodule update --init --recursive`
+이미 받은 상태에서 이 레포가 고정한 커밋으로 맞추기: `git pull && git submodule update --init --recursive`
+
+- 이 명령은 각 레포의 최신 `main`이 아니라, 이 레포가 **함께 검증해 고정한 커밋**을 내려받습니다. 각 레포 최신으로 가려면 아래 "이 레포 갱신 규칙"의 `--remote`를 씁니다.
+- 고정된 backend와 Release 데이터 버전은 짝이 맞아야 합니다(예: v2 전달본은 Flyway V8 이상). CI의 `scripts/check-data-version.sh`가 확인합니다.
 
 ## 실행
 
