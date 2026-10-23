@@ -24,13 +24,39 @@ AI의 직접 배정 경로는 유지합니다. LLM1은 동일 기체 이력의 �
 LLM3는 두 판단과 실제 근거를 비교해 통과·재조사·사람 검토를 결정합니다.
 설계와 검증 한계는 [AI 판단 분리 문서](ai/docs/contextual-handoff.md)에 있습니다.
 
-이 변경의 AI 포인터는 [LLM PR #5](https://github.com/mro-agent-proj/LLM/pull/5)의
-`cd33f17`입니다. LLM PR을 먼저 반영하고, squash/rebase로 커밋이 달라지면
-통합 PR의 AI 포인터도 병합된 커밋으로 맞춥니다.
-로컬에서는 AI 테스트·합성 자료를 사용한 실제 모델 점검과 데이터 전달본 버전 검사를 했으며,
-이 조합의 실제 MCP·공유 DB·RabbitMQ 전체 통합 실행은 아직 검증하지 않았습니다.
+AI 포인터 `cd33f17`은 병합된 [LLM PR #5](https://github.com/mro-agent-proj/LLM/pull/5)의
+구현입니다. 이번 조합은 아래 변경을 함께 연결합니다.
+
+| 구성 | 고정 커밋 | 포함 변경 |
+| --- | --- | --- |
+| Backend | `f6e5f3a` | main의 서비스 평가셋 200건 + 팀 인원 현황 API·시드·Flyway V10 |
+| dashboard | `3fa231e` | 관리자 인원 현황 화면 |
+| agent | `1182627` | R02 페이지 순위 고정·커서 검증 + 실제 업무 DB 연결 필수 CI |
+
+[Backend PR #14](https://github.com/mro-agent-proj/backend/pull/14)와
+[agent PR #12](https://github.com/mro-agent-proj/agent/pull/12)를 먼저 병합한 뒤 이 통합 PR을 반영합니다. squash/rebase로 커밋이
+달라지면 submodule 포인터도 해당 병합 커밋으로 갱신해야 합니다.
+공유 DB 마이그레이션과 시드 적재는 기존처럼 Backend가 수행합니다.
+
+로컬 검증: Backend 40건, RAG·Backend Flyway 업무 DB를 모두 연결한 agent 전체 **43건 skip 없이 통과**,
+시작 스크립트 회귀 테스트 3건 통과.
+dashboard `3fa231e`는 타입 검사·빌드를 통과한 버전입니다.
+`python3 -m unittest discover -s scripts/tests -v`는 Docker나 외부 접속 없이 준비 대기 만료와
+각 서비스 health check 실패 시 비정상 종료되는지 검사하며 통합 CI에서도 실행합니다.
+이 조합의 실제 모델·MCP HTTP·RabbitMQ 전체 종단간 시나리오는 아직 실행하지 않았습니다.
+
 진행 중인 AI 실행을 마친 후 버전을 교체하세요. 구버전 직접 배정 checkpoint에
 새 맥락 비교 자료가 없으면 최종 검증에서 사람 검토로 전환됩니다.
+R02의 이전 커서는 재사용할 수 없으며 새 검색으로 시작해야 합니다.
+하이브리드 검색은 단어·벡터 각각 상위 50건의 고정 합집합을 페이지로 나눕니다.
+순위나 검색 방식이 바뀌면 기존 offset을 적용하지 않고 `INVALID_CURSOR`를 반환합니다.
+
+서비스 평가셋은 `backend/data/eval/service/scenarios.jsonl`에 있습니다(A 64/B 96/C 16/D 24,
+dev 80/test 120). 기체·항공사·정확 모델, 부서 코드, 이력 참조를 현재 업무 시드와 대조했고
+새 인원 현황 변경과의 파일 충돌은 없습니다. 원본 평가셋은 변경하지 않았습니다.
+정답 라벨은 154건이 `not_reviewed`, 31건이 `needs_final_review`, 15건이 `decided`입니다.
+`expected`, `source`, `label_check`는 평가 메타데이터이며 AI 입력에 포함하지 않습니다.
+`model_match=family` 54건도 RAG의 정확 모델 검색 범위를 넓히라는 지시로 해석하지 않습니다.
 
 ## 처음 받기
 

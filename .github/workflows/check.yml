@@ -23,6 +23,8 @@ jobs:
         run: |
           bash -n scripts/*.sh
           shellcheck scripts/*.sh
+      - name: Startup failure regression tests
+        run: python3 -m unittest discover -s scripts/tests -v
       - name: Data packages match the pinned backend
         run: bash scripts/check-data-version.sh
       - name: No secrets or dumps committed
