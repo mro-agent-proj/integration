@@ -2,7 +2,7 @@
 # 데이터는 Release 첨부파일로 받습니다 (scripts/fetch-data.sh)
 *.dump
 *.tar
-# 루트에 둔 개인 사본 (보고서 원본은 mro-agent-deliverables 레포)
+# 루트에 둔 개인 사본 (보고서 원본은 deliverables 레포)
 /*.pdf
 /*.png
 /보고서_필요데이터_체크리스트.md

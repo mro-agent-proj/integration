@@ -31,7 +31,7 @@ jobs:
           app-id: ${{ vars.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: mro-agent-integration,infra
+          repositories: ${{ github.event.repository.name }},${{ vars.INFRA_REPO || 'infra' }}
 
       - uses: actions/checkout@v4
         with:
@@ -106,7 +106,7 @@ jobs:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           TAG: ${{ steps.commit.outputs.tag }}
         run: |
-          gh api "repos/${{ github.repository_owner }}/infra/dispatches" \
+          gh api "repos/${{ github.repository_owner }}/${{ vars.INFRA_REPO || 'infra' }}/dispatches" \
             -f event_type=combo-verified \
             -f "client_payload[combo]=$TAG" \
             -f "client_payload[services][backend]=$(git -C backend rev-parse HEAD)" \

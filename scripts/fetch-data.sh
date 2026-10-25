@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# 비공개 데이터 레포(mro-agent-data)의 Release에서 RAG 전달본·원문 데이터를 받아 backend/data/ 아래에 풉니다.
+# 비공개 데이터 레포(data)의 Release에서 RAG 전달본·원문 데이터를 받아 backend/data/ 아래에 풉니다.
 # 외부 저작물 가공 데이터가 있어 이 레포가 아니라 비공개 레포에 둡니다. gh 로그인과 그 레포 읽기 권한이 필요합니다.
 # 사용: ./scripts/fetch-data.sh [release 태그]   (기본: data-2026-10-22)
 set -euo pipefail
 TAG="${1:-data-2026-10-22}"
-REPO="mro-agent-proj/mro-agent-data"
+REPO="mro-agent-proj/data"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 

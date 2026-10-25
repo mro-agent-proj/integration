@@ -1,7 +1,7 @@
 # 항공기 정비요청 Agent: 통합 레포
 
 정비 신고를 같은 기체의 수리이력과 SDR 사례로 분류하고 담당 정비 부서에 배정하는 AI Agent입니다.
-이 레포는 네 개의 레포를 **submodule로 묶어 서로 맞춰 돌아가는 커밋 조합**을 기록하고, 전체 실행 순서·데이터 받는 법을 함께 둡니다. 최종보고서 등 산출물은 [`mro-agent-deliverables`](https://github.com/mro-agent-proj/mro-agent-deliverables)에 있습니다.
+이 레포는 네 개의 레포를 **submodule로 묶어 서로 맞춰 돌아가는 커밋 조합**을 기록하고, 전체 실행 순서·데이터 받는 법을 함께 둡니다. 최종보고서 등 산출물은 [`deliverables`](https://github.com/mro-agent-proj/deliverables)에 있습니다.
 
 | 폴더 | 레포 | 역할 |
 | --- | --- | --- |
@@ -88,8 +88,8 @@ R02 검색 정책·색인이 달라진 이전 커서는 재사용하지 않고 �
 ## 처음 받기
 
 ```bash
-git clone --recurse-submodules https://github.com/mro-agent-proj/mro-agent-integration.git
-cd mro-agent-integration
+git clone --recurse-submodules https://github.com/mro-agent-proj/integration.git
+cd integration
 ./scripts/fetch-data.sh          # RAG 전달본·원문 데이터 (gh 로그인 필요)
 ```
 
@@ -120,7 +120,7 @@ cd mro-agent-integration
 
 ## 데이터
 
-데이터는 용량과 저작권 때문에 git이 아니라 **비공개 레포 [`mro-agent-data`](https://github.com/mro-agent-proj/mro-agent-data)의 Release `data-2026-10-22`** 첨부파일로 둡니다(읽기 권한 필요). `scripts/fetch-data.sh`가 받아서 `backend/data/` 아래에 풉니다.
+데이터는 용량과 저작권 때문에 git이 아니라 **비공개 레포 [`data`](https://github.com/mro-agent-proj/data)의 Release `data-2026-10-22`** 첨부파일로 둡니다(읽기 권한 필요). `scripts/fetch-data.sh`가 받아서 `backend/data/` 아래에 풉니다.
 
 | 첨부파일 | 풀리는 위치 | 내용 |
 | --- | --- | --- |
@@ -161,7 +161,7 @@ python3 scripts/scenario_eval.py --only SV-A-001,SV-B-002,V2
 ## 최종 결과보고서
 
 최종 결과보고서(PDF·HTML), 화면 캡처, 테스트 원자료, 트러블슈팅은 산출물 레포
-[`mro-agent-deliverables`](https://github.com/mro-agent-proj/mro-agent-deliverables)의 `final-report/`로 옮겼습니다.
+[`deliverables`](https://github.com/mro-agent-proj/deliverables)의 `final-report/`로 옮겼습니다.
 보고서·발표자료 같은 코드가 아닌 산출물은 앞으로 그 레포에서 관리합니다.
 
 ## 이 레포 갱신 규칙
@@ -180,6 +180,6 @@ main에 병합되면 아래 흐름으로 이 레포가 자동 갱신됩니다. �
   나머지 레포가 병합되어 검증을 통과하는 시점에 함께 반영됩니다.
 - main에는 봇(GitHub App)만 push합니다. 문서·스크립트처럼 이 레포 자체를 고칠 일은 관리자가 처리합니다.
 - 수동 갱신이 필요하면 Actions → Sync를 직접 실행합니다(workflow_dispatch).
-- RAG 전달본이 바뀌면 `mro-agent-data`에 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 위 데이터 표를 고칩니다.
+- RAG 전달본이 바뀌면 `data`에 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 위 데이터 표를 고칩니다.
 - 업무 시드·서비스 평가셋이 바뀌면 Backend의 manifest와 안내를 함께 갱신합니다. RAG 전달본 변경과 구분합니다.
 - `.env`·키·덤프 파일·개인 평가용 compose override는 커밋하지 않습니다.
