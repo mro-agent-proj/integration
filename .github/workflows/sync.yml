@@ -1,0 +1,116 @@
+name: Sync
+
+# 서비스 레포 main이 바뀌면(Release 워크플로가 알림) 네 submodule을 각 레포 main 최신으로 옮기고,
+# 통합 검증을 통과한 경우에만 봇이 커밋하고 verified 태그를 붙인 뒤 infra 레포에 조합을 넘깁니다.
+# 검증에 실패하면 아무것도 커밋하지 않습니다. 이 레포 main에는 이 워크플로만 push합니다.
+on:
+  repository_dispatch:
+    types: [service-merged]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: 알림 내용
+        env:
+          PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+        run: echo "trigger=${{ github.event_name }} payload=$PAYLOAD"
+
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: mro-agent-integration,infra
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app.outputs.token }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: 네 서비스 main 최신으로
+        id: bump
+        run: |
+          git submodule update --remote --recursive
+          git submodule status
+          if git diff --quiet; then
+            echo "바뀐 서비스가 없습니다."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ---------- 통합 검증 (check.yml과 같은 검사 + backend 스택 기동) ----------
+      - name: 시작 스크립트
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          bash -n scripts/*.sh
+          shellcheck scripts/*.sh
+          python3 -m unittest discover -s scripts/tests -v
+      - name: 고정된 backend 평가·시드 계약
+        if: steps.bump.outputs.changed == 'true'
+        run: python3 -m unittest discover -s backend/scripts/tests -v
+      - name: 데이터 전달본과 backend 버전
+        if: steps.bump.outputs.changed == 'true'
+        run: bash scripts/check-data-version.sh
+      - name: backend 스택 기동 (mock AI)
+        if: steps.bump.outputs.changed == 'true'
+        working-directory: backend
+        run: |
+          AI_MODE=mock docker compose up -d --build postgres rabbitmq backend
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8080/actuator/health; then echo; exit 0; fi
+            sleep 5
+          done
+          docker compose logs backend | tail -100
+          exit 1
+      - name: 스택 정리
+        if: always() && steps.bump.outputs.changed == 'true'
+        working-directory: backend
+        run: docker compose down -v
+
+      # ---------- 검증 통과: 커밋 + verified 태그 + infra에 전달 ----------
+      - name: 커밋과 태그
+        id: commit
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: |
+          bot_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          changes="$(git diff --submodule=short --name-only | tr '\n' ' ')"
+          tag="verified-$(date -u +%Y%m%dT%H%M%SZ)"
+          git add frontend backend mcp ai
+          git commit -m "submodule: sync ${changes% } (${tag})"
+          git tag -a "$tag" -m "통합 검증 통과 조합"
+          git push origin HEAD:main
+          git push origin "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: infra 레포에 조합 전달
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          TAG: ${{ steps.commit.outputs.tag }}
+        run: |
+          gh api "repos/${{ github.repository_owner }}/infra/dispatches" \
+            -f event_type=combo-verified \
+            -f "client_payload[combo]=$TAG" \
+            -f "client_payload[services][backend]=$(git -C backend rev-parse HEAD)" \
+            -f "client_payload[services][LLM]=$(git -C ai rev-parse HEAD)" \
+            -f "client_payload[services][agent]=$(git -C mcp rev-parse HEAD)" \
+            -f "client_payload[services][dashboard]=$(git -C frontend rev-parse HEAD)"
+          echo "infra 레포에 $TAG 전달"

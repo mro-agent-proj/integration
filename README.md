@@ -41,8 +41,8 @@ R05·Backend 최종 검증도 같은 목록을 따릅니다. R02 검색 범위 �
 | LLM | `d83ee96` | LLM2 상태 격리·B02 차단, 현재 평가 안내와 폐기된 평가셋 기록 분리 |
 
 2026-10-23 각 하위 저장소의 main에 위 커밋이 반영된 것을 확인한 조합입니다.
-다음 버전으로 갱신할 때도 하위 저장소 반영을 먼저 확인하고, 이 저장소의 gitlink와 위 표를 함께 갱신합니다.
-main 최신을 자동으로 추종하지 않습니다. 폐기된 평가셋의 성적·기대 분기는 [AI 과거 기록](ai/docs/archive/legacy-scenarios-2026-10-21.md)에 분리했으며 현재 평가에 사용하지 않습니다.
+이후 조합은 Sync 워크플로가 통합 검증을 통과한 경우에만 커밋하고 `verified-*` 태그를 붙입니다(아래 "이 레포 갱신 규칙").
+위 표는 2026-10-23 기준 기록이며, 최신 조합은 submodule 포인터와 최신 `verified-*` 태그로 확인합니다. 폐기된 평가셋의 성적·기대 분기는 [AI 과거 기록](ai/docs/archive/legacy-scenarios-2026-10-21.md)에 분리했으며 현재 평가에 사용하지 않습니다.
 
 ## 검증 상태 (2026-10-23)
 
@@ -121,7 +121,7 @@ cd mro-agent-integration
 
 ## 데이터
 
-데이터는 용량 때문에 git이 아니라 **Release [`data-2026-10-22`](https://github.com/mro-agent-proj/mro-agent-integration/releases/tag/data-2026-10-22)** 첨부파일로 둡니다. `scripts/fetch-data.sh`가 받아서 `backend/data/` 아래에 풉니다.
+데이터는 용량과 저작권 때문에 git이 아니라 **비공개 레포 [`mro-agent-data`](https://github.com/mro-agent-proj/mro-agent-data)의 Release `data-2026-10-22`** 첨부파일로 둡니다(읽기 권한 필요). `scripts/fetch-data.sh`가 받아서 `backend/data/` 아래에 풉니다.
 
 | 첨부파일 | 풀리는 위치 | 내용 |
 | --- | --- | --- |
@@ -170,12 +170,20 @@ python3 scripts/scenario_eval.py --only SV-A-001,SV-B-002,V2
 
 ## 이 레포 갱신 규칙
 
-- 각 레포 작업은 각 레포에 커밋합니다. 이 레포에는 "함께 동작을 확인한 조합"이 될 때 submodule 포인터를 올립니다.
-  ```bash
-  git submodule update --remote          # 네 레포 main 최신으로
-  ./scripts/up.sh                        # 동작 확인
-  git add frontend backend mcp ai && git commit -m "submodule: <무엇을 맞췄는지>"
-  ```
-- RAG 전달본이 바뀌면 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 이 표를 고칩니다.
+이 레포에는 PR을 올리지 않습니다. 코드 변경은 각 서비스 레포(backend, dashboard, agent, LLM)에 PR로 올리고,
+main에 병합되면 아래 흐름으로 이 레포가 자동 갱신됩니다. 운영 배포는 [infra](https://github.com/mro-agent-proj/infra) 레포에서만 합니다.
+
+```
+서비스 레포 main 병합 → CI 통과 → Release(이미지 ECR push) → 이 레포에 알림
+  → Sync: 네 submodule을 각 레포 main 최신으로 → 통합 검증 → 통과하면 봇이 커밋 + verified-<시각> 태그
+  → infra 레포에 조합 전달 → release PR → 승인 후 배포
+```
+
+- 통합 검증: 시작 스크립트·채점 계약 테스트, 데이터 전달본 버전 검사, backend 스택(mock AI) 기동·헬스 확인.
+  실패하면 아무것도 커밋하지 않고 워크플로가 실패로 남습니다. 짝이 맞아야 하는 변경(예: backend와 LLM)은
+  나머지 레포가 병합되어 검증을 통과하는 시점에 함께 반영됩니다.
+- main에는 봇(GitHub App)만 push합니다. 문서·스크립트처럼 이 레포 자체를 고칠 일은 관리자가 처리합니다.
+- 수동 갱신이 필요하면 Actions → Sync를 직접 실행합니다(workflow_dispatch).
+- RAG 전달본이 바뀌면 `mro-agent-data`에 새 Release 태그로 올리고 `scripts/fetch-data.sh` 기본 태그와 위 데이터 표를 고칩니다.
 - 업무 시드·서비스 평가셋이 바뀌면 Backend의 manifest와 안내를 함께 갱신합니다. RAG 전달본 변경과 구분합니다.
-- `.env`·키·덤프 파일·개인 평가용 compose override는 커밋하지 않습니다. 변경은 별도 브랜치와 PR로 제출하고 main에 직접 push하지 않습니다.
+- `.env`·키·덤프 파일·개인 평가용 compose override는 커밋하지 않습니다.
