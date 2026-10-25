@@ -1,7 +1,7 @@
 # 항공기 정비요청 Agent: 통합 레포
 
 정비 신고를 같은 기체의 수리이력과 SDR 사례로 분류하고 담당 정비 부서에 배정하는 AI Agent입니다.
-이 레포는 네 개의 레포를 **submodule로 묶어 서로 맞춰 돌아가는 커밋 조합**을 기록하고, 전체 실행 순서·데이터 받는 법·최종보고서를 함께 둡니다.
+이 레포는 네 개의 레포를 **submodule로 묶어 서로 맞춰 돌아가는 커밋 조합**을 기록하고, 전체 실행 순서·데이터 받는 법을 함께 둡니다. 최종보고서 등 산출물은 [`mro-agent-deliverables`](https://github.com/mro-agent-proj/mro-agent-deliverables)에 있습니다.
 
 | 폴더 | 레포 | 역할 |
 | --- | --- | --- |
@@ -9,7 +9,6 @@
 | `backend/` | [backend](https://github.com/mro-agent-proj/backend) | 계정·요청·배정, DB·RabbitMQ, MCP 토큰 발급 (Spring Boot, :8080) |
 | `mcp/` | [agent](https://github.com/mro-agent-proj/agent) | business-mcp(:8101)·rag-mcp(:8102), 읽기 전용 |
 | `ai/` | [LLM](https://github.com/mro-agent-proj/LLM) | LLM1 맥락 분류 → LLM2 독립 조사 → LLM3 판단·근거 대조 (FastAPI + LangGraph, :8100) |
-| `report/` | 이 레포 | 최종 결과보고서(PDF·HTML), 화면 캡처, 테스트 원자료, 트러블슈팅 |
 
 ```
 [frontend] ─/api─▶ [backend] ──mro.agent.run (+MCP 토큰 2개)──▶ [ai]
@@ -161,12 +160,9 @@ python3 scripts/scenario_eval.py --only SV-A-001,SV-B-002,V2
 
 ## 최종 결과보고서
 
-- `report/항공기_정비요청_Agent_최종결과보고서.pdf` (26쪽)
-- `report/final_report.template.html`: 원본 HTML. 고친 뒤 Chrome으로 PDF 인쇄
-- `report/images/`: 아키텍처·LangGraph 그림, 화면 캡처 13장 (시연 데이터 11건으로 촬영)
-- `report/raw/`: 시나리오 실행 결과(`scenario_results.json`), S10 에이전트 추적, 인증·DLQ·테스트 기록
-- `report/트러블슈팅.md`: 통합하며 겪은 문제 20건과 해결
-- `report/v1/`: 팀이 처음 쓴 v1 보고서와 체크리스트
+최종 결과보고서(PDF·HTML), 화면 캡처, 테스트 원자료, 트러블슈팅은 산출물 레포
+[`mro-agent-deliverables`](https://github.com/mro-agent-proj/mro-agent-deliverables)의 `final-report/`로 옮겼습니다.
+보고서·발표자료 같은 코드가 아닌 산출물은 앞으로 그 레포에서 관리합니다.
 
 ## 이 레포 갱신 규칙
 
