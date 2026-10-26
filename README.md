@@ -71,7 +71,7 @@ python3 scripts/scenario_eval.py --only SV-A-001,SV-B-002,V2
 
 결과는 `backend/data/eval/service/results/<시각>.json`에 남습니다. 채점 정의는 `backend/data/eval/service/README.md`, 단위 평가는 `backend/data/eval/sdr/README.md`를 따릅니다. 실행 전 `maintenance_history_v2.csv`와 DB 이력이 같은지 확인하세요(manifest·CI는 파일 조합만 검사).
 
-최근 기록: [2026-10-23 조합과 200건 검증 결과](docs/verification-2026-10-23.md).
+평가 결과 원자료는 [deliverables 평가 번들](https://github.com/mro-agent-proj/deliverables/tree/main/evaluations/2026-10-23-isolated-200)에 있습니다.
 
 ## 조합 갱신 흐름
 
