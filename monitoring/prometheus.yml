@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: backend
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["backend:8080"]
+
+  - job_name: ai
+    static_configs:
+      - targets: ["ai:8100"]
+
+  - job_name: mcp
+    static_configs:
+      - targets: ["business-mcp:8101", "rag-mcp:8102"]
+
+  # 큐별 지표(ready, unacked, DLQ)가 필요해 per-object 엔드포인트를 씁니다.
+  - job_name: rabbitmq
+    metrics_path: /metrics/per-object
+    static_configs:
+      - targets: ["rabbitmq:15692"]
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

@@ -1,0 +1,39 @@
+# Prometheus + Grafana. backend 네트워크에 붙어 서비스 이름으로 수집합니다.
+# 먼저 ./scripts/up.sh 로 스택을 띄운 뒤: docker compose -f monitoring/compose.yaml up -d
+services:
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - mro-prometheus:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks: [backend]
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    depends_on: [prometheus]
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/mro-overview.json
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - mro-grafana:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks: [backend]
+
+networks:
+  backend:
+    name: ${BACKEND_NETWORK:-backend_default}
+    external: true
+
+volumes:
+  mro-prometheus:
+  mro-grafana:
