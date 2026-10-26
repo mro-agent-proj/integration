@@ -71,6 +71,12 @@ cd integration
 
 시드 계정은 모두 비밀번호 `test1234`입니다. 신고자 `reporter1@kal.test`, 정비팀 `sys@mro.test`·`fcs@mro.test` 등, 관리자 `admin@mro.test`. 전체 목록은 `backend/data/seed/users.csv`.
 
+4. (선택) 모니터링을 띄웁니다. 스택이 올라간 뒤 실행합니다.
+   ```bash
+   docker compose -f monitoring/compose.yaml up -d
+   ```
+   Grafana http://localhost:3000 (`admin` / `admin`, `GRAFANA_ADMIN_PASSWORD`로 변경) 홈에 "MRO 정비요청 Agent" 대시보드가 열립니다. Prometheus는 http://localhost:9090 입니다. 두 포트 모두 localhost에만 열립니다. 자세한 내용은 [monitoring/README.md](monitoring/README.md).
+
 - AI 없이 화면만 보려면 `cd backend && docker compose up -d` (기본 `AI_MODE=mock`, 키워드 기반 가짜 판단).
 - 기존 DB·큐·AI 상태 볼륨은 삭제하지 않습니다. 데이터 교체는 아래 "로컬 환경 갱신"을 따릅니다.
 
